@@ -1,54 +1,90 @@
-#include "armjit.h"
+#include "jit_arm64_fe.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Host functions
-void host_print(uint64_t value, uint64_t unused1, uint64_t unused2) {
-    printf("[HOST] Value: %llu / 0x%llx\n", value, value);
+// ===== Host Functions =====
+
+/**
+ * Host function that receives all 16 registers
+ * This demonstrates the new calling convention
+ */
+void host_print_registers(uint64_t* regs) {
+    printf("[HOST] Registers dump:\n");
+    for (int i = 0; i < 16; i++) {
+        printf("  r%d = %llu (0x%llx)\n", i, regs[i], regs[i]);
+    }
 }
 
-void host_print_compare(uint64_t a, uint64_t b, uint64_t result) {
-    const char* cmp = (result == 0xFFFFFFFF) ? "<" : ((result == 1) ? ">" : "==");
-    printf("[HOST] %llu %s %llu\n", a, b, cmp);
+/**
+ * Host function with explicit arguments
+ */
+void host_print_value(uint64_t value) {
+    printf("[HOST] Value: %lld / 0x%llx\n", value, value);
 }
 
-void subroutine_example(uint64_t a, uint64_t b, uint64_t c) {
-    printf("[SUBROUTINE] Called with: %llu, %llu, %llu\n", a, b, c);
+uint64_t host_get_value() {
+    printf("[HOST] get value returns 7\n");
+    return 7;
 }
 
-typedef void (*JITFunction)(void* buffer);
+/**
+ * Host function that receives multiple register values
+ */
+void host_print_three(uint64_t a, uint64_t b, uint64_t c) {
+    printf("[HOST] Values: a=%llu, b=%llu, c=%llu\n", a, b, c);
+}
+
+/**
+ * Host function to demonstrate computation
+ */
+void host_print_sum(uint64_t a, uint64_t b, uint64_t sum) {
+    printf("[HOST] %llu + %llu = %llu\n", a, b, sum);
+}
+
+// Type for JIT-generated function
+typedef void (*JITFunction)(void* memory, uint64_t* registers, int entry_point);
 
 int main() {
-    printf("=== ARM64 JIT Compiler - Complete Test Suite ===\n\n");
+    printf("=== ARM64 JIT Compiler - Frontend/Backend Demo ===\n\n");
     
-    // Allocate buffer
-    const size_t BUFFER_SIZE = 1024 * 1024;
-    void* buffer = mmap(nullptr, BUFFER_SIZE,
-                       PROT_READ | PROT_WRITE,
-                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    
-    if (buffer == MAP_FAILED) {
-        perror("mmap buffer");
+    // Allocate memory buffer (simulating machine memory)
+    const size_t MEMORY_SIZE = 64 * 1024;  // 64KB
+    void* memory = malloc(MEMORY_SIZE);
+    if (!memory) {
+        perror("malloc memory");
         return 1;
     }
+    memset(memory, 0, MEMORY_SIZE);
     
-    printf("Buffer allocated at: %p\n\n", buffer);
+    // Initialize some test data in memory
+    ((uint64_t*)memory)[0] = 0x0123456789ABCDEF;
+    ((uint32_t*)memory)[2] = 0xDEADBEEF;
+    ((uint16_t*)memory)[6] = 0x1234;
+    ((uint8_t*)memory)[14] = 0x42;
     
-    // Store function pointers
-    ((uint64_t*)buffer)[0] = (uint64_t)host_print;
-    ((uint64_t*)buffer)[1] = (uint64_t)host_print_compare;
-    ((uint64_t*)buffer)[2] = (uint64_t)subroutine_example;
-
-    // ===== Test 0:  =====
-    printf("--- Test 0: print ---\n");
+    // Allocate register array (16 uint64_t registers)
+    uint64_t registers[16];
+    memset(registers, 0, sizeof(registers));
+    
+    printf("Memory allocated: %p (%zu bytes)\n", memory, MEMORY_SIZE);
+    printf("Registers array: %p (16 x uint64_t)\n\n", registers);
+    
+    // ===== Test 1: Basic arithmetic =====
+    printf("--- Test 1: Basic Arithmetic ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
-
+        
+        // r0 = 42
+        // r1 = 100
+        // r2 = r0 + r1
         jit.loadImmediate(0, 42);
         jit.loadImmediate(1, 100);
         jit.add(2, 0, 1);
-        jit.hostCall(0, 2, 0, 0);
+        
+        // Call host function to print r0, r1, r2
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
         
         jit.end();
         
@@ -59,85 +95,33 @@ int main() {
         }
         
         printf("Executing...\n");
-        ((JITFunction)func)(buffer);
-        printf("\n");
+        ((JITFunction)func)(memory, registers, 0);
+        printf("After execution: r2 = %llu\n\n", registers[2]);
     }
-
-    // ===== Test 0:  =====
-    printf("--- Test 0: memory ---\n");
+    
+    // ===== Test 2: Memory operations =====
+    printf("--- Test 2: Memory Operations ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
-
-        jit.loadImmediate(0, 0); // reg, val
-        jit.loadImmediate(1, 4);
-        jit.loadImmediate(2, 8);
-        jit.loadImmediate(3, 0x0123456789ABCDEF);
-//        jit.store64ToVarAddress(0, 3); // mem[0] = r3
-//        jit.load64FromVarAddress(0, 4); // r4 = mem64[0]
-//        jit.load32FromVarAddress(0, 5); // r5 = mem32[0]
-//        jit.load64FromVarAddress(1, 6); // r6 = mem64[1]
-//        jit.load32FromVarAddress(1, 7); // r7 = mem32[1]
         
-  
-//        jit.hostCall(0, 3, 0, 0);
-        jit.load64FromVarAddress(0, 9); jit.hostCall(0, 9, 0, 0);
-//        jit.load32FromVarAddress(0, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load16FromVarAddress(0, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load8FromVarAddress(0, 10); jit.hostCall(0, 10, 0, 0);
-//
-//        jit.load64FromVarAddress(1, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load32FromVarAddress(1, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load16FromVarAddress(1, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load8FromVarAddress(1, 10); jit.hostCall(0, 10, 0, 0);
-//
-//        jit.load64FromVarAddress(2, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load32FromVarAddress(2, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load16FromVarAddress(2, 10); jit.hostCall(0, 10, 0, 0);
-//        jit.load8FromVarAddress(2, 10); jit.hostCall(0, 10, 0, 0);
-
-        jit.end();
+        // Load 64-bit value from memory[0]
+        jit.loadMemory64(0, 0);
         
-        void* func = jit.finalize();
-        if (!func) {
-            fprintf(stderr, "Failed to finalize\n");
-            return 1;
-        }
+        // Load 32-bit value from memory[8]
+        jit.loadMemory32(1, 8);
         
-        printf("Executing...\n");
-        ((JITFunction)func)(buffer);
-        printf("\n");
-    }
-
-    // ===== Test 1: Compare instruction =====
-    printf("--- Test 1: Compare Instruction ---\n");
-    {
-        ARM64JIT jit;
-        jit.begin();
-        /*
-        // Test: 10 vs 20 (should be -1, less than)
-        jit.loadImmediate(0, 10);
-        jit.loadImmediate(1, 20);
-        jit.compare(0, 1, 2);
-        jit.hostCall(1, 0, 1, 2);
+        // Load 16-bit value from memory[12]
+        jit.loadMemory16(2, 12);
         
-        // Test: 30 vs 15 (should be 1, greater than)
-        jit.loadImmediate(3, 30);
-        jit.loadImmediate(4, 15);
-        jit.compare(3, 4, 5);
-        jit.hostCall(1, 3, 4, 5);
+        // Load 8-bit value from memory[14]
+        jit.loadMemory8(3, 14);
         
-        // Test: 42 vs 42 (should be 0, equal)
-        jit.loadImmediate(6, 42);
-        jit.loadImmediate(7, 42);
-        jit.compare(6, 7, 8);
-        jit.hostCall(1, 6, 7, 8);
-        */
-
-        jit.loadImmediate(0, 42);
-        jit.loadImmediate(1, 100);
-        jit.add(2, 0, 1);
-        jit.hostCall(0, 2, 0, 0);
+        // Print all values
+        jit.hostCallWithArgs((uint64_t)host_print_value, 0);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 3);
         
         jit.end();
         
@@ -148,36 +132,48 @@ int main() {
         }
         
         printf("Executing...\n");
-        ((JITFunction)func)(buffer);
+        printf("Expected values:\n");
+        printf("  64-bit from offset 0: 0x0123456789ABCDEF\n");
+        printf("  32-bit from offset 8: 0xDEADBEEF\n");
+        printf("  16-bit from offset 12: 0x1234\n");
+        printf("  8-bit from offset 14: 0x42\n");
+        printf("Actual values:\n");
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
     
-    // ===== Test 2: Branch if equal =====
-    printf("--- Test 2: Branch If Equal ---\n");
+    
+    // ===== Test 4: Branches and control flow =====
+    printf("--- Test 4: Branches and Control Flow ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
         
-        // var[0] = 10
-        // var[1] = 10
-        // if (var[0] == var[1]) jump to label
-        // var[2] = 999 (should be skipped)
-        // label: var[2] = 42
+        // r0 = 10
+        // r1 = 10
+        // if (r0 == r1) jump to equal_label
+        // r2 = 999 (skipped)
+        // jump to end
+        // equal_label:
+        // r2 = 42
+        // end:
         
         jit.loadImmediate(0, 10);
         jit.loadImmediate(1, 10);
+        jit.compare(0, 1);
         
-        size_t branch_pos = jit.getCurrentIndex();
-        jit.branchIfEqual(0, 1, 0);  // Will patch this
-        
-        // This should be skipped
+        size_t branch_pos = jit.branchIfEqual();
+        // r0 != r1
         jit.loadImmediate(2, 999);
+        size_t skip_jump = jit.jump();
         
-        size_t label = jit.getCurrentIndex();
-        jit.patchBranch(branch_pos, label);
-        
-        jit.loadImmediate(2, 42);
-        jit.hostCall(0, 2, 0, 0);
+        // r0 == r1
+        size_t equal_label = jit.loadImmediate(2, 42);
+        jit.patchBranch(branch_pos, equal_label);
+
+        // End
+        size_t end_label = jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.patchBranch(skip_jump, end_label);
         
         jit.end();
         
@@ -188,107 +184,39 @@ int main() {
         }
         
         printf("Executing (should print 42, not 999)...\n");
-        ((JITFunction)func)(buffer);
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
     
-    // ===== Test 3: Branch if not equal =====
-    printf("--- Test 3: Branch If NOT Equal ---\n");
+    // ===== Test 5: Loop (count from 0 to 9) =====
+    printf("--- Test 5: Loop (Count 0-9) ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
         
-        jit.loadImmediate(0, 10);
-        jit.loadImmediate(1, 20);
-        
-        size_t branch_pos = jit.getCurrentIndex();
-        jit.branchIfEqual(0, 1, 0);  // Will NOT branch (not equal)
-        
-        // This SHOULD execute
-        jit.loadImmediate(2, 123);
-        
-        size_t label = jit.getCurrentIndex();
-        jit.patchBranch(branch_pos, label);
-        
-        jit.hostCall(0, 2, 0, 0);
-        
-        jit.end();
-        
-        void* func = jit.finalize();
-        if (!func) {
-            fprintf(stderr, "Failed to finalize\n");
-            return 1;
-        }
-        
-        printf("Executing (should print 123)...\n");
-        ((JITFunction)func)(buffer);
-        printf("\n");
-    }
-    
-    // ===== Test 4: Unconditional jump =====
-    printf("--- Test 4: Unconditional Jump ---\n");
-    {
-        ARM64JIT jit;
-        jit.begin();
-        
-        jit.loadImmediate(0, 1);
-        
-        size_t jump_pos = jit.getCurrentIndex();
-        jit.jump(0);  // Will patch
-        
-        // This should be skipped
-        jit.loadImmediate(0, 999);
-        jit.loadImmediate(0, 888);
-        jit.loadImmediate(0, 777);
-        
-        size_t target = jit.getCurrentIndex();
-        jit.patchBranch(jump_pos, target);
-        
-        jit.loadImmediate(0, 55);
-        jit.hostCall(0, 0, 0, 0);
-        
-        jit.end();
-        
-        void* func = jit.finalize();
-        if (!func) {
-            fprintf(stderr, "Failed to finalize\n");
-            return 1;
-        }
-        
-        printf("Executing (should print 55)...\n");
-        ((JITFunction)func)(buffer);
-        printf("\n");
-    }
-    
-    // ===== Test 5: Loop with branch =====
-    printf("--- Test 5: Loop (Count to 10) ---\n");
-    {
-        ARM64JIT jit;
-        jit.begin();
-        
-        // var[0] = counter (0 to 10)
-        // var[1] = 10 (limit)
-        // var[2] = 1 (increment)
+        // r0 = counter (0 to 9)
+        // r1 = 10 (limit)
+        // loop:
+        //   print r0
+        //   r0 = r0 + 1
+        //   if r0 < r1 goto loop
         
         jit.loadImmediate(0, 0);   // counter = 0
         jit.loadImmediate(1, 10);  // limit = 10
-        jit.loadImmediate(2, 1);   // increment = 1
         
         size_t loop_start = jit.getCurrentIndex();
         
         // Print counter
-        jit.hostCall(0, 0, 0, 0);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 0, 0, 0);
         
         // counter++
-        jit.add(0, 0, 2);
+        jit.addImmediate(0, 0, 1);
         
         // Compare counter with limit
-        jit.compare(0, 1, 3);
+        jit.compare(0, 1);
         
-        // If counter < limit (result == -1), loop back
-        jit.loadImmediate(4, 0xFFFFFFFF);  // -1
-        size_t branch_pos = jit.getCurrentIndex();
-        jit.branchIfEqual(3, 4, loop_start);
+        // If counter < limit, loop back
+        jit.branchIfLessThan(loop_start);
         
         jit.end();
         
@@ -298,36 +226,35 @@ int main() {
             return 1;
         }
         
-        printf("Executing loop...\n");
-        ((JITFunction)func)(buffer);
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
-    
-    // ===== Test 6: Call and Return (subroutine) =====
-    printf("--- Test 6: Call and Return ---\n");
+
+    // ===== Test 6: Subroutine call =====
+    printf("--- Test 6: Subroutine Call and Return ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
         
         // Main code
-        jit.loadImmediate(0, 100);
-        jit.loadImmediate(1, 200);
+        jit.loadImmediate(0, 5);
+        jit.loadImmediate(1, 7);
         
         size_t call_pos = jit.getCurrentIndex();
         jit.call(0);  // Will patch to subroutine
         
-        jit.loadImmediate(2, 42);
-        jit.hostCall(0, 2, 0, 0);
+        // After subroutine returns, print result
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2, 0, 0);
         
         size_t main_end = jit.getCurrentIndex();
         jit.jump(0);  // Jump to actual end
         
-        // Subroutine starts here
+        // Subroutine: adds r0 and r1, stores in r2
         size_t subroutine_start = jit.getCurrentIndex();
         jit.patchBranch(call_pos, subroutine_start);
         
-        jit.add(2, 0, 1);  // var[2] = var[0] + var[1] = 300
-        jit.hostCall(0, 2, 0, 0);  // Print 300
+        jit.add(2, 0, 1);  // r2 = r0 + r1
         jit.ret();
         
         // Actual end
@@ -342,55 +269,85 @@ int main() {
             return 1;
         }
         
-        printf("Executing (should print 300, then 42)...\n");
-        ((JITFunction)func)(buffer);
+        printf("Executing (should compute 5 + 7 = 12)...\n");
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
-    
-    // ===== Test 7: Fibonacci using branches =====
-    printf("--- Test 7: Fibonacci (first 10 numbers) ---\n");
+  
+    printf("--- Test: Math ---\n");
     {
-        ARM64JIT jit;
+        ARM64JITFrontend jit;
         jit.begin();
         
-        // var[0] = current fib number
-        // var[1] = previous fib number
-        // var[2] = temp
-        // var[3] = counter
-        // var[4] = limit (10)
-        // var[5] = 1 (increment)
+        jit.loadImmediate(0, 0x100);
+        jit.loadImmediate(1, 0x18);
+        jit.add(2, 0, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.sub(2, 0, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.div(2, 0, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.mod(2, 0, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.mul(2, 0, 1);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        
+        jit.sub(2, 0, 1);
+        jit.signum(2, 2);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2);
+        jit.end();
+        
+        void* func = jit.finalize();
+        if (!func) {
+            fprintf(stderr, "Failed to finalize\n");
+            return 1;
+        }
+        
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
+    }
+
+    // ===== Test 7: Fibonacci sequence =====
+    printf("--- Test 7: Fibonacci Sequence (first 10 numbers) ---\n");
+    {
+        ARM64JITFrontend jit;
+        jit.begin();
+        
+        // r0 = current fib
+        // r1 = previous fib
+        // r2 = temp
+        // r3 = counter
+        // r4 = limit
         
         jit.loadImmediate(0, 1);   // fib[0] = 1
         jit.loadImmediate(1, 0);   // fib[-1] = 0
         jit.loadImmediate(3, 0);   // counter = 0
         jit.loadImmediate(4, 10);  // limit = 10
-        jit.loadImmediate(5, 1);   // increment = 1
         
         size_t loop_start = jit.getCurrentIndex();
         
         // Print current fib number
-        jit.hostCall(0, 0, 0, 0);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 0, 0, 0);
         
         // temp = current + previous
         jit.add(2, 0, 1);
         
         // previous = current
-        jit.loadImmediate(6, 0);  // Copy var[0] to var[1] via var[6]
-        jit.add(6, 0, 6);         // var[6] = var[0] + 0
+        jit.loadImmediate(5, 0);
+        jit.add(5, 0, 5);  // r5 = r0
         jit.loadImmediate(1, 0);
-        jit.add(1, 6, 1);
+        jit.add(1, 5, 1);  // r1 = r5
         
         // current = temp
         jit.loadImmediate(0, 0);
-        jit.add(0, 2, 0);
+        jit.add(0, 2, 0);  // r0 = r2
         
         // counter++
-        jit.add(3, 3, 5);
+        jit.addImmediate(3, 3, 1);
         
         // if counter < limit, continue
-        jit.compare(3, 4, 7);
-        jit.loadImmediate(8, 0xFFFFFFFF);
-        jit.branchIfEqual(7, 8, loop_start);
+        jit.compare(3, 4);
+        jit.branchIfLessThan(loop_start);
         
         jit.end();
         
@@ -401,49 +358,31 @@ int main() {
         }
         
         printf("Executing...\n");
-        ((JITFunction)func)(buffer);
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
     
-    // ===== Test 8: Complex control flow =====
-    printf("--- Test 8: Complex Control Flow ---\n");
+    printf("--- Test 7: Fibonacci 2 ---\n");
     {
-        ARM64JIT jit;
+        memset(registers, sizeof(registers), 0); // TODO: zero cleared
+        ARM64JITFrontend jit;
         jit.begin();
+        jit.loadImmediate(1, 0);
+        jit.loadImmediate(2, 1);
+        jit.loadImmediate(14, 1);
+        jit.hostCallWithReturnArgs((uintptr_t)host_get_value, 3);
         
-        // if (var[0] == 5) {
-        //     var[1] = 100;
-        // } else {
-        //     var[1] = 200;
-        // }
-        // print var[1]
-        
-        jit.loadImmediate(0, 5);
-        jit.loadImmediate(9, 5);
-        
-        size_t if_branch = jit.getCurrentIndex();
-        jit.branchIfEqual(0, 9, 0);
-        
-        // else block
-        jit.loadImmediate(1, 200);
-        size_t else_jump = jit.getCurrentIndex();
-        jit.jump(0);
-        
-        // if block
-        size_t if_label = jit.getCurrentIndex();
-        jit.patchBranch(if_branch, if_label);
-        jit.loadImmediate(1, 100);
-        
-        // after if-else
-        size_t after_if = jit.getCurrentIndex();
-        jit.patchBranch(else_jump, after_if);
-        
-        jit.hostCall(0, 1, 0, 0);
-        
-        jit.end();
-        
-        printf("Code size: %zu bytes\n", jit.getCodeSize());
-        jit.disassemble();
+        size_t loc_loop = jit.compare(3, 15);
+        size_t jump_end = jit.branchIfEqual();
+        jit.add(4, 1, 2);
+        jit.mov(1, 2);
+        jit.mov(2, 4);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 1, 0, 0);
+        jit.sub(3, 3, 14);
+        jit.jump(loc_loop);
+
+        size_t loc_end = jit.end();
+        jit.patchBranch(jump_end, loc_end);
         
         void* func = jit.finalize();
         if (!func) {
@@ -451,13 +390,158 @@ int main() {
             return 1;
         }
         
-        printf("\nExecuting (should print 100 since var[0]==5)...\n");
-        ((JITFunction)func)(buffer);
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
+        printf("\n");
+    }
+
+    
+    // ===== Test 8: Writing to memory =====
+    printf("--- Test 8: Memory Write Operations ---\n");
+    {
+        ARM64JITFrontend jit;
+        jit.begin();
+        
+        // Clear some memory
+        uint64_t write_offset = 1024;
+        
+        // Write 64-bit value
+        jit.loadImmediate(0, 0xFEEDFACECAFEBEEF);
+        jit.storeMemory64(0, write_offset);
+        
+        // Write 32-bit value
+        jit.loadImmediate(1, 0x12345678);
+        jit.storeMemory32(1, write_offset + 8);
+        
+        // Read them back
+        jit.loadMemory64(2, write_offset);
+        jit.loadMemory32(3, write_offset + 8);
+        
+        // Print
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2, 0, 0);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 3, 0, 0);
+        
+        jit.end();
+        
+        void* func = jit.finalize();
+        if (!func) {
+            fprintf(stderr, "Failed to finalize\n");
+            return 1;
+        }
+        
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
+        
+        // Verify directly
+        printf("Verification from C:\n");
+        printf("  64-bit at offset 1024: 0x%llx\n", ((uint64_t*)((char*)memory + write_offset))[0]);
+        printf("  32-bit at offset 1032: 0x%x\n", ((uint32_t*)((char*)memory + write_offset + 8))[0]);
+        printf("\n");
+    }
+    
+    // ===== Test 9: Register-indirect memory writes =====
+    printf("--- Test 9: Register-Indirect Memory Writes ---\n");
+    {
+        ARM64JITFrontend jit;
+        jit.begin();
+        
+        // r0 = address (2048)
+        // r1 = value (0xDEADC0DE)
+        // memory[r0] = r1
+        
+        jit.loadImmediate(0, 2048);
+        jit.loadImmediate(1, 0xDEADC0DE);
+        jit.storeMemoryReg32(0, 1);
+        
+        // Read it back
+        jit.loadMemoryReg32(2, 0);
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2, 0, 0);
+        
+        jit.end();
+        
+        void* func = jit.finalize();
+        if (!func) {
+            fprintf(stderr, "Failed to finalize\n");
+            return 1;
+        }
+        
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
+        printf("\n");
+    }
+    
+    // ===== Test 10: Host function with all registers =====
+    printf("--- Test 10: Host Function Receives All Registers ---\n");
+    {
+        ARM64JITFrontend jit;
+        jit.begin();
+        
+        // Initialize all 16 registers with different values
+        for (int i = 0; i < 16; i++) {
+            jit.loadImmediate(i, i * 111);
+        }
+        
+        // Call host function that receives pointer to all registers
+        jit.hostCall((uint64_t)host_print_registers);
+        
+        jit.end();
+        
+        void* func = jit.finalize();
+        if (!func) {
+            fprintf(stderr, "Failed to finalize\n");
+            return 1;
+        }
+        
+        printf("Executing...\n");
+        ((JITFunction)func)(memory, registers, 0);
+        printf("\n");
+    }
+    
+    // ===== Test 11: Complex computation =====
+    printf("--- Test 11: Complex Computation (a*2 + b*3) ---\n");
+    {
+        ARM64JITFrontend jit;
+        jit.begin();
+        
+        // r0 = 10 (a)
+        // r1 = 20 (b)
+        // r2 = a * 2 = a + a
+        // r3 = b * 3 = b + b + b
+        // r4 = r2 + r3
+        
+        jit.loadImmediate(0, 10);
+        jit.loadImmediate(1, 20);
+        
+        // r2 = a * 2
+        jit.add(2, 0, 0);
+        
+        // r3 = b * 3
+        jit.add(3, 1, 1);  // r3 = b + b
+        jit.add(3, 3, 1);  // r3 = r3 + b
+        
+        // r4 = r2 + r3
+        jit.add(4, 2, 3);
+        
+        // Print intermediate and final results
+        jit.hostCallWithArgs((uint64_t)host_print_value, 2, 0, 0);  // a*2
+        jit.hostCallWithArgs((uint64_t)host_print_value, 3, 0, 0);  // b*3
+        jit.hostCallWithArgs((uint64_t)host_print_value, 4, 0, 0);  // total
+        
+        jit.end();
+        
+        void* func = jit.finalize();
+        if (!func) {
+            fprintf(stderr, "Failed to finalize\n");
+            return 1;
+        }
+        
+        printf("Executing (10*2 + 20*3 = 20 + 60 = 80)...\n");
+        ((JITFunction)func)(memory, registers, 0);
         printf("\n");
     }
     
     // Cleanup
-    munmap(buffer, BUFFER_SIZE);
+    free(memory);
     
     printf("=== All Tests Complete ===\n");
     
