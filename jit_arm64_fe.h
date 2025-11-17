@@ -553,9 +553,9 @@ public:
     /**
      * Call subroutine (with link)
      */
-    void call(size_t target_index) {
+    size_t call(size_t target_index = 0) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        emit(ARM64Backend::gen_bl(offset));
+        return emit(ARM64Backend::gen_bl(offset));
     }
     
     /**
@@ -599,26 +599,34 @@ public:
      * 
      * void (*func)(uint64_t regs[16])
      */
-    void hostCall(uint64_t func_ptr) {
-        // Save x19, x20 (they contain our memory and registers pointers)
-        // They're already saved, but we need to make sure they're not clobbered
-        
-        // Load function pointer into x9
-        emit_load_imm64(9, func_ptr);
-        
-        // Argument is x20 (registers pointer)
-        emit(ARM64Backend::gen_mov_x(0, 20));
-        
-        // Call function
-        emit(ARM64Backend::gen_blr(9));
-        
-        // After return, our x19 and x20 are still intact (callee-saved)
-    }
+//    void hostCall(uint64_t func_ptr) {
+//        // Save x19, x20 (they contain our memory and registers pointers)
+//        // They're already saved, but we need to make sure they're not clobbered
+//        
+//        // Load function pointer into x9
+//        emit_load_imm64(9, func_ptr);
+//        
+//        // Argument is x20 (registers pointer)
+//        emit(ARM64Backend::gen_mov_x(0, 20));
+//        
+//        // Call function
+//        emit(ARM64Backend::gen_blr(9));
+//        
+//        // After return, our x19 and x20 are still intact (callee-saved)
+//    }
     
     /**
      * Call a host function with explicit register arguments
      * void (*func)(uint64_t r0, uint64_t r1, uint64_t r2, uint64_t r3, ...)
      */
+    size_t hostCall(uint64_t func_ptr)
+    {
+        size_t pos = getCurrentIndex();
+        emit_load_imm64(9, func_ptr);
+        emit(ARM64Backend::gen_blr(9));
+        return pos;
+    }
+
     size_t hostCallWithRegs(uint64_t func_ptr, int arg0)
     {
         size_t pos = getCurrentIndex();

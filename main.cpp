@@ -9,6 +9,10 @@
 #include "evm2.h"
 #include "jit_arm64_fe.h"
 #include <map>
+#include <csetjmp>
+
+// Global jump buffer for handling HALT
+thread_local jmp_buf halt_jmp_buf;
 
 typedef void (*JITFunction)(void* memory, uint64_t* registers, int entry_point);
 
@@ -17,15 +21,31 @@ void host_print_value(uint64_t value) {
 }
 
 uint64_t host_read_value() {
-    return 17;
+    static int counter = 0;
+    switch (counter++)
+    {
+        case 0:
+            return 17;
+        case 1:
+            return 99;
+        default:
+            assert(0);
+    }
+}
+
+void host_terminate(uint64_t value) {
+    // Jump back to the setjmp point with value 1
+    longjmp(halt_jmp_buf, 1);
 }
 
 int main()
 {
 //    EVM2::Disassembler disasm("fibonacci_loop.evm");
 //    EVM2::Disassembler disasm("math.evm");
-    EVM2::Disassembler disasm("memory.evm");
-
+//    EVM2::Disassembler disasm("memory.evm");
+//    EVM2::Disassembler disasm("xor.evm");
+    EVM2::Disassembler disasm("xor-with-stack-frame.evm");
+    
     // Print using the built-in print method
     disasm.print();
 
@@ -110,14 +130,20 @@ int main()
                 fixups.push_back({jit.jump(), i.args[0].addr});
                 break;
             case EVM2::Op::HLT:
-                // TODO: host call to terminate program
-                jit.end();
+                jit.hostCall((uintptr_t)host_terminate);
+                break;
+            case EVM2::Op::CALL:
+                fixups.push_back({jit.call(), i.args[0].addr});
+                break;
+            case EVM2::Op::RET:
+                jit.ret();
                 break;
             default:
                 assert(0);
         }
     }
-    // TODO: add jit.end()
+    
+    jit.end();
 
     for (const auto [instruction, target] : fixups)
     {
@@ -132,6 +158,16 @@ int main()
     void* func = jit.finalize();
     assert(func);
     printf("Executing...\n");
-    ((JITFunction)func)(memory, registers, 0);
-    printf("\n");
+    
+    // Set up the jump point
+    if (setjmp(halt_jmp_buf) == 0) {
+        // First time through - execute the JIT code
+        ((JITFunction)func)(memory, registers, 0);
+        printf("JIT code returned normally (no HALT encountered)\n");
+    } else {
+        // Returned via longjmp from host_terminate
+        printf("Done (HALT executed).\n");
+    }
+    
+    return 0;
 }
