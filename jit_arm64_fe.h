@@ -106,7 +106,12 @@ public:
      * On entry:
      *   x0 = memory pointer
      *   x1 = registers pointer
-     *   x2 = entry_point (instruction index)
+     *   x2 = entry_point (number of ARM64 instructions to skip)
+     * 
+     * The entry_point mechanism:
+     *   - x2 contains the number of ARM64 instructions to skip (0 = no skip)
+     *   - We compute PC + (x2 * 4) and jump to that address
+     *   - This allows skipping N generated ARM64 instructions
      */
     void begin() {
         code.clear();
@@ -118,23 +123,34 @@ public:
         // Adjust SP and save FP, LR
         emit(ARM64Backend::gen_sub_x_imm(31, 31, 16));     // sub sp, sp, #16
         emit(ARM64Backend::gen_stp_x(29, 30, 31, 0));      // stp x29, x30, [sp]
-        //emit(ARM64Backend::gen_mov_x(29, 31));             // mov x29, sp
-        emit(ARM64Backend::gen_add_x_imm(29, 31, 0)); // add    x29, sp, #0
+        emit(ARM64Backend::gen_add_x_imm(29, 31, 0));      // add x29, sp, #0
         
         // Adjust SP and save x19, x20
         emit(ARM64Backend::gen_sub_x_imm(31, 31, 16));     // sub sp, sp, #16
         emit(ARM64Backend::gen_stp_x(19, 20, 31, 0));      // stp x19, x20, [sp]
         
-        // Preserve x0 (memory) and x1 (registers) in x19 and x20
-        emit(ARM64Backend::gen_mov_x(19, 0));  // x19 = memory pointer
-        emit(ARM64Backend::gen_mov_x(20, 1));  // x20 = registers pointer
+        // Preserve x0 (memory) and x1 (registers)
+        emit(ARM64Backend::gen_mov_x(19, 0));              // mov x19, x0 (memory pointer)
+        emit(ARM64Backend::gen_mov_x(20, 1));              // mov x20, x1 (registers pointer)
         
-        // Handle entry_point (x2)
-        // If entry_point != 0, we would need a jump table
-        // For now, we just proceed (entry_point will be implemented with jump table)
+        // Handle entry_point jump: skip x2 ARM64 instructions
+        // x2 = number of instructions to skip (0 = no skip)
+        // Each instruction is 4 bytes, so offset = x2 * 4
+        // 
+        // Layout:
+        //   [N+0] lsl x9, x2, #2     - Multiply skip count by 4
+        //   [N+1] adr x10, #12       - Get PC + 12 (points to first instruction after BR)
+        //   [N+2] add x9, x10, x9    - Compute target = base + (skip * 4)
+        //   [N+3] br x9              - Jump to computed address
+        //   [N+4] <-- Target when x2=0 (first generated instruction)
         
-        // Note: Code will be generated after this point
-        entry_points.push_back(code.size());  // Entry point 0 = start
+        emit(ARM64Backend::gen_lsl_x_imm(9, 2, 2));        // lsl x9, x2, #2  (x9 = x2 * 4)
+        emit(ARM64Backend::gen_adr(10, 12));               // adr x10, #12 (get PC + 12, points to after BR)
+        emit(ARM64Backend::gen_add_x_reg(9, 10, 9));       // add x9, x10, x9 (x9 = PC + offset)
+        emit(ARM64Backend::gen_br(9));                     // br x9 (jump to computed address)
+        
+        // Entry point 0 = start of actual code (right after the jump)
+        entry_points.push_back(code.size());
     }
     
     /**
@@ -220,14 +236,14 @@ public:
         storeRegister(reg_index, 2);
         return pos;
     }
-    
+#if 0
     /**
      * Load 64-bit value from memory
      * registers[dest_reg] = *(uint64_t*)(memory + address)
      */
     void loadMemory64(int dest_reg, uint64_t address) {
         emit_load_imm64(2, address);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2));  // ldr x2, [x19, x2]
+        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true));  // ldr x2, [x19, x2]
         storeRegister(dest_reg, 2);
     }
     
@@ -237,7 +253,7 @@ public:
      */
     void loadMemory32(int dest_reg, uint64_t address) {
         emit_load_imm64(2, address);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 32));  // ldr w2, [x19, x2]
+        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, 32));  // ldr w2, [x19, x2]
         storeRegister(dest_reg, 2);
     }
     
@@ -246,7 +262,7 @@ public:
      */
     void loadMemory16(int dest_reg, uint64_t address) {
         emit_load_imm64(2, address);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 16));
+        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, 16));
         storeRegister(dest_reg, 2);
     }
     
@@ -255,7 +271,7 @@ public:
      */
     void loadMemory8(int dest_reg, uint64_t address) {
         emit_load_imm64(2, address);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 8));
+        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, 8));
         storeRegister(dest_reg, 2);
     }
     
@@ -295,84 +311,75 @@ public:
         emit_load_imm64(3, address);
         emit(ARM64Backend::gen_strb_reg(2, 19, 3));
     }
-    
+#endif
     // TODO: add comment
-    void storeMemory(int src_reg, uint64_t address, int size) {
-        switch (size) {
-            case 8:
-                storeMemory64(src_reg, address);
-                break;
-            case 4:
-                storeMemory32(src_reg, address);
-                break;
-            case 2:
-                storeMemory16(src_reg, address);
-                break;
-            case 1:
-                storeMemory8(src_reg, address);
-                break;
-            default:
-                assert(0);
-        }
+    void storeMemoryReg(int src_reg, uint64_t address, int size) {
+        loadRegister(src_reg, 2);
+        emit_load_imm64(3, address);
+        emit(ARM64Backend::gen_reg_mem(2, 19, 3, false, size));
     }
     
     /**
      * Load from memory using register as address
      * registers[dest_reg] = *(uint64_t*)(memory + registers[addr_reg])
      */
-    void loadMemoryReg64(int dest_reg, int addr_reg) {
+    void loadMemoryReg(int dest_reg, int addr_reg, int size) {
         loadRegister(addr_reg, 2);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2));
+        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, size));
         storeRegister(dest_reg, 2);
     }
     
     /**
      * Load 32-bit from memory using register as address
      */
-    void loadMemoryReg32(int dest_reg, int addr_reg) {
-        loadRegister(addr_reg, 2);
-        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 32));
-        storeRegister(dest_reg, 2);
-    }
+//    void loadMemoryReg32(int dest_reg, int addr_reg) {
+//        loadRegister(addr_reg, 2);
+//        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 32));
+//        storeRegister(dest_reg, 2);
+//    }
     
     /**
      * Store to memory using register as address
      */
-    void storeMemoryReg64(int addr_reg, int src_reg) {
-        loadRegister(addr_reg, 2);
-        loadRegister(src_reg, 3);
-        emit(ARM64Backend::gen_str_x_reg(3, 19, 2));
-    }
+//    void storeMemoryReg(int addr_reg, int src_reg, int size) {
+//        loadRegister(addr_reg, 2);
+//        loadRegister(src_reg, 3);
+//        emit(ARM64Backend::gen_str_x_reg(3, 19, 2, size));
+//    }
     
     /**
      * Store 32-bit to memory using register as address
      */
-    void storeMemoryReg32(int addr_reg, int src_reg) {
-        loadRegister(addr_reg, 2);
-        loadRegister(src_reg, 3);
-        emit(ARM64Backend::gen_str_w_reg(3, 19, 2));
-    }
-    
+//    void storeMemoryReg32(int addr_reg, int src_reg) {
+//        loadRegister(addr_reg, 2);
+//        loadRegister(src_reg, 3);
+//        emit(ARM64Backend::gen_str_w_reg(3, 19, 2));
+//    }
+#if 0
     // TODO: add comment, missing opts
     void loadMemory(int dest_reg, int addr_reg, int size) {
-        switch (size) {
-            case 8:
-                loadMemoryReg64(dest_reg, addr_reg);
-                break;
-            case 4:
-                loadMemoryReg32(dest_reg, addr_reg);
-                break;
+        loadRegister(addr_reg, 2);
+        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, size*8));
+        storeRegister(dest_reg, 2);
+
+//        switch (size) {
+//            case 8:
+//                loadMemoryReg64(dest_reg, addr_reg);
+//                break;
+//            case 4:
+//                loadMemoryReg32(dest_reg, addr_reg);
+//                break;
 //            case 2:
 //                loadMemoryReg16(dest_reg, addr_reg);
 //                break;
 //            case 1:
 //                loadMemoryReg8(dest_reg, addr_reg);
 //                break;
-            default:
-                assert(0);
-        }
+//            default:
+//                assert(0);
+//        }
     }
-
+#endif
     
     // ===== Arithmetic Operations =====
     
@@ -612,7 +619,7 @@ public:
      * Call a host function with explicit register arguments
      * void (*func)(uint64_t r0, uint64_t r1, uint64_t r2, uint64_t r3, ...)
      */
-    size_t hostCallWithArgs(uint64_t func_ptr, int arg0)
+    size_t hostCallWithRegs(uint64_t func_ptr, int arg0)
     {
         size_t pos = getCurrentIndex();
         // Load function pointer
@@ -624,7 +631,7 @@ public:
         return pos;
     }
 
-    size_t hostCallWithArgs(uint64_t func_ptr, int arg0, int arg1, int arg2)
+    size_t hostCallWithRegs(uint64_t func_ptr, int arg0, int arg1, int arg2)
     {
         size_t pos = getCurrentIndex();
         // Load function pointer
@@ -648,12 +655,24 @@ public:
         // No need to restore, they're callee-saved
     }
 
-    size_t hostCallWithReturnArgs(uint64_t func_ptr, int argOut)
+    size_t hostCallWithReturnRegs(uint64_t func_ptr, int argOut)
     {
         size_t pos = getCurrentIndex();
         emit_load_imm64(9, func_ptr);
         emit(ARM64Backend::gen_blr(9));
         storeRegister(argOut, 0);
+        return pos;
+    }
+
+    size_t hostCallWithMem(uint64_t func_ptr, int addr_reg, int size)
+    {
+        size_t pos = getCurrentIndex();
+        // Load function pointer
+        emit_load_imm64(9, func_ptr);
+        
+        loadRegister(addr_reg, 2);
+        emit(ARM64Backend::gen_reg_mem(0, 19, 2, true, size*8));
+        emit(ARM64Backend::gen_blr(9));
         return pos;
     }
 

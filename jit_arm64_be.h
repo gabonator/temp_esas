@@ -121,7 +121,7 @@ public:
 //    static uint32_t gen_ldr_x_reg(int rt, int rn, int rm) {
 //        return 0xF8606800 | ((rm & 0x1F) << 16) | ((rn & 0x1F) << 5) | (rt & 0x1F);
 //    }
-    static uint32_t gen_ldr_x_reg(int rt, int rn, int rm, int size = 64) {
+    static uint32_t gen_reg_mem(int rt, int rn, int rm, bool load = true, int size = 64) {
         // https://github.com/qemu/qemu/blob/master/tcg/aarch64/tcg-target.c.inc#L1199
         // zero extended offset addr
         enum {
@@ -129,22 +129,27 @@ public:
             MO_16 = 1,
             MO_32 = 2,
             MO_64 = 3,
+            LDST_ST = 0,
             LDST_LD = 1,
             TCG_TYPE_I64 = 1,
             I3312_LDRB = 0x38000000 | LDST_LD << 22 | MO_8 << 30,
             I3312_LDRH = 0x38000000 | LDST_LD << 22 | MO_16 << 30,
             I3312_LDRW = 0x38000000 | LDST_LD << 22 | MO_32 << 30,
             I3312_LDRX = 0x38000000 | LDST_LD << 22 | MO_64 << 30,
+            I3312_STRB = 0x38000000 | LDST_ST << 22 | MO_8 << 30,
+            I3312_STRH = 0x38000000 | LDST_ST << 22 | MO_16 << 30,
+            I3312_STRW = 0x38000000 | LDST_ST << 22 | MO_32 << 30,
+            I3312_STRX = 0x38000000 | LDST_ST << 22 | MO_64 << 30,
             I3312_TO_I3310 = 0x00200800,
         };
         
         uint32_t x = I3312_TO_I3310 | 0x4000;
         switch (size)
         {
-            case 64: x |= I3312_LDRX; break;
-            case 32: x |= I3312_LDRW; break;
-            case 16: x |= I3312_LDRH; break;
-            case 8: x |= I3312_LDRB; break;
+            case 64: x |= load ? I3312_LDRX : I3312_STRX; break;
+            case 32: x |= load ? I3312_LDRW : I3312_STRW; break;
+            case 16: x |= load ? I3312_LDRH : I3312_STRH; break;
+            case 8: x |= load ? I3312_LDRB : I3312_STRB; break;
             default:
                 assert(0);
         }
@@ -194,11 +199,11 @@ public:
      * STR Xt, [Xn, Xm]
      * Store register, 64-bit, register offset
      */
-    static uint32_t gen_str_x_reg(int rt, int rn, int rm) {
-        return (0b11 << 30) | (0b111 << 27) | (0b00 << 22) | (0b1 << 21) |
-               ((rm & 0x1F) << 16) | (0b011 << 13) | (0b0 << 12) |
-               ((rn & 0x1F) << 5) | (rt & 0x1F);
-    }
+//    static uint32_t gen_str_x_reg(int rt, int rn, int rm) {
+//        return (0b11 << 30) | (0b111 << 27) | (0b00 << 22) | (0b1 << 21) |
+//               ((rm & 0x1F) << 16) | (0b011 << 13) | (0b0 << 12) |
+//               ((rn & 0x1F) << 5) | (rt & 0x1F);
+//    }
     
     /**
      * STR Wt, [Xn, Xm]
@@ -532,6 +537,29 @@ public:
     static uint32_t gen_br(int rn) {
         return (0b1101011 << 25) | (0b0000 << 21) | (0b11111 << 16) |
                ((rn & 0x1F) << 5);
+    }
+    
+    /**
+     * ADR Xd, offset
+     * Form PC-relative address
+     * offset is in bytes (signed 21-bit, ±1MB range)
+     */
+    static uint32_t gen_adr(int rd, int32_t offset) {
+        uint32_t immlo = offset & 0x3;
+        uint32_t immhi = (offset >> 2) & 0x7FFFF;
+        return (0b0 << 31) | (immlo << 29) | (0b10000 << 24) | (immhi << 5) | (rd & 0x1F);
+    }
+    
+    /**
+     * LSL Xd, Xn, #shift
+     * Logical shift left (immediate), 64-bit
+     * Implemented as UBFM Xd, Xn, #(-shift MOD 64), #(63-shift)
+     */
+    static uint32_t gen_lsl_x_imm(int rd, int rn, int shift) {
+        int immr = (64 - shift) & 0x3F;
+        int imms = (63 - shift) & 0x3F;
+        return (0b1 << 31) | (0b10 << 29) | (0b100110 << 23) | (0b1 << 22) |
+               (immr << 16) | (imms << 10) | ((rn & 0x1F) << 5) | (rd & 0x1F);
     }
     
     /**

@@ -215,7 +215,7 @@ private:
             return a;
         } else {
             // memory: next 2 bits = ss (BE inside these 2 bits), then 4-bit little-endian reg index
-            auto ssOpt = br.readBitsBE(2);
+            auto ssOpt = br.readBitsLEbits(2);
             if (!ssOpt) return {};
             unsigned ss = (unsigned)*ssOpt;
             unsigned sizeBytes = 1;

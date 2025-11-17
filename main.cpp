@@ -22,9 +22,9 @@ uint64_t host_read_value() {
 
 int main()
 {
-    EVM2::Disassembler disasm("fibonacci_loop.evm");
-    //EVM2::Disassembler disasm("math.evm");
-//    EVM2::Disassembler disasm("memory.evm");
+//    EVM2::Disassembler disasm("fibonacci_loop.evm");
+//    EVM2::Disassembler disasm("math.evm");
+    EVM2::Disassembler disasm("memory.evm");
 
     // Print using the built-in print method
     disasm.print();
@@ -49,9 +49,7 @@ int main()
                 break;
             case EVM2::Op::CONSOLEREAD:
                 assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::REG);
-                {
-                    jit.hostCallWithReturnArgs((uintptr_t)host_read_value, i.args[0].reg);
-                }
+                jit.hostCallWithReturnRegs((uintptr_t)host_read_value, i.args[0].reg);
                 break;
             case EVM2::Op::JUMPEQ:
                 assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::ADDR && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
@@ -64,25 +62,27 @@ int main()
                 break;
             case EVM2::Op::MOV:
                 if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG)
-                {
                     jit.mov(i.args[1].reg, i.args[0].reg);
-                    break;
-                }
-//                if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::MEM)
-//                {
-//                    jit.storeMemory(i.args[0].reg, i.args[0].addr, i.args[1].sizeBytes);
-//                    break;
-//                }
-//                if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::MEM && i.args[1].kind == EVM2::Arg::Kind::REG)
-//                {
-//                    jit.loadMemory(i.args[0].reg, i.args[0].addr, i.args[1].sizeBytes);
-//                    break;
-//                }
-                assert(0);
+                else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::MEM)
+                    jit.storeMemoryReg(i.args[0].reg, i.args[0].addr, i.args[1].sizeBytes*8);
+                else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::MEM && i.args[1].kind == EVM2::Arg::Kind::REG)
+                    jit.loadMemoryReg(i.args[1].reg, i.args[0].addr, i.args[0].sizeBytes*8);
+                else
+                    assert(0);
                 break;
             case EVM2::Op::CONSOLEWRITE:
-                assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::REG);
-                jit.hostCallWithArgs((uintptr_t)host_print_value, i.args[0].reg, 0, 0);
+                assert(i.args.size() == 1);
+                switch (i.args[0].kind)
+                {
+                    case EVM2::Arg::Kind::REG:
+                        jit.hostCallWithRegs((uintptr_t)host_print_value, i.args[0].reg);
+                        break;
+                    case EVM2::Arg::Kind::MEM:
+                        jit.hostCallWithMem((uintptr_t)host_print_value, i.args[0].reg, i.args[0].sizeBytes);
+                        break;
+                    default:
+                        assert(0);
+                }
                 break;
             case EVM2::Op::SUB:
                 assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
@@ -110,13 +110,15 @@ int main()
                 fixups.push_back({jit.jump(), i.args[0].addr});
                 break;
             case EVM2::Op::HLT:
+                // TODO: host call to terminate program
                 jit.end();
                 break;
             default:
                 assert(0);
         }
     }
-    
+    // TODO: add jit.end()
+
     for (const auto [instruction, target] : fixups)
     {
         auto it = mapping.find(target);
