@@ -35,9 +35,6 @@ private:
     void* executable_memory;
     size_t executable_size;
     
-    // Jump table for entry points
-    std::vector<size_t> entry_points;
-    
     size_t emit(uint32_t instruction) {
         code.push_back(instruction);
         return code.size() - 1;
@@ -115,7 +112,6 @@ public:
      */
     void begin() {
         code.clear();
-        entry_points.clear();
         
         // Minimal prologue - only save FP and LR
         // We'll use x19 and x20 to preserve x0 and x1
@@ -145,12 +141,10 @@ public:
         //   [N+4] <-- Target when x2=0 (first generated instruction)
         
         emit(ARM64Backend::gen_lsl_x_imm(9, 2, 2));        // lsl x9, x2, #2  (x9 = x2 * 4)
-        emit(ARM64Backend::gen_adr(10, 12));               // adr x10, #12 (get PC + 12, points to after BR)
+        //emit(ARM64Backend::gen_adr(10, 12));               // adr x10, #12 (get PC + 12, points to after BR)
+        emit(ARM64Backend::gen_adr(10, 12-entry()*4)); // 11 instructions of program prologue
         emit(ARM64Backend::gen_add_x_reg(9, 10, 9));       // add x9, x10, x9 (x9 = PC + offset)
         emit(ARM64Backend::gen_br(9));                     // br x9 (jump to computed address)
-        
-        // Entry point 0 = start of actual code (right after the jump)
-        entry_points.push_back(code.size());
     }
     
     /**
@@ -172,14 +166,6 @@ public:
         return pos;
     }
     
-    /**
-     * Mark a new entry point
-     * Returns the entry point index
-     */
-//    int markEntryPoint() {
-//        entry_points.push_back(code.size());
-//        return entry_points.size() - 1;
-//    }
     
     // ===== Register Operations =====
     
@@ -584,10 +570,19 @@ public:
     /**
      * Patch a branch instruction at branch_index to target target_index
      */
-    void patchBranch(size_t branch_index, size_t target_index) {
+    void patchBranchOrImm(size_t branch_index, size_t target_index) {
         if (branch_index >= code.size()) return;
         
         uint32_t inst = code[branch_index];
+
+        // Not a real branch, just 16 bit immediate
+        if ((inst & 0xFF000000) == 0xD2000000) {
+            int32_t imm16 = target_index & 0xffff;
+            assert(imm16 == target_index);
+            code[branch_index] = (inst & ~(0xffff << 5)) | (imm16 << 5);
+            return;
+        }
+
         int32_t offset = (int32_t)target_index - (int32_t)branch_index;
         
         // Conditional branch (b.cond)
@@ -688,6 +683,16 @@ public:
         return pos;
     }
 
+    size_t hostCallWithReturnRegsImm(uint64_t func_ptr, int argOut, int argImmIn)
+    {
+        size_t pos = getCurrentIndex();
+        emit_load_imm64(0, argImmIn);
+        emit_load_imm64(9, func_ptr);
+        emit(ARM64Backend::gen_blr(9));
+        storeRegister(argOut, 0);
+        return pos;
+    }
+
     size_t hostCallWithMem(uint64_t func_ptr, int addr_reg, int size)
     {
         size_t pos = getCurrentIndex();
@@ -756,6 +761,11 @@ public:
         for (size_t i = 0; i < code.size(); i++) {
             printf("%04zx: %08x\n", i * 4, code[i]);
         }
+    }
+    
+    size_t entry()
+    {
+        return 11;
     }
 };
 

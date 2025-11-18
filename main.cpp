@@ -14,7 +14,7 @@
 // Global jump buffer for handling HALT
 thread_local jmp_buf halt_jmp_buf;
 
-typedef void (*JITFunction)(void* memory, uint64_t* registers, int entry_point);
+typedef void (*JITFunction)(void* memory, uint64_t* registers, size_t entry_point);
 
 void host_print_value(uint64_t value) {
     printf("[HOST] Value: %lld / 0x%llx\n", value, value);
@@ -38,25 +38,23 @@ void host_terminate(uint64_t value) {
     longjmp(halt_jmp_buf, 1);
 }
 
-int main()
+uint64_t host_thread_create(uint64_t label)
 {
-//    EVM2::Disassembler disasm("fibonacci_loop.evm");
-//    EVM2::Disassembler disasm("math.evm");
-//    EVM2::Disassembler disasm("memory.evm");
-//    EVM2::Disassembler disasm("xor.evm");
-    EVM2::Disassembler disasm("xor-with-stack-frame.evm");
-    
-    // Print using the built-in print method
-    disasm.print();
+    printf("[HOST] thread create 0x%lx\n", label);
+    return 1234;
+}
 
-    // Get the instructions
-    ARM64JITFrontend jit;
-    jit.begin();
+void host_thread_join()
+{
+    printf("[HOST] thread join\n");
+}
 
+JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit)
+{
     std::vector<std::pair<size_t, EVM2::Arg::addr_t>> fixups;
     std::map<EVM2::Arg::addr_t, size_t> mapping;
     std::map<EVM2::Arg::addr_t, char> labels;
-
+    
     // Identify call/jump labels
     const auto& instructions = disasm.getInstructions();
     for (const EVM2::Instruction& i : instructions)
@@ -77,7 +75,10 @@ int main()
                 break;
         }
     }
+    
+    jit.begin();
 
+    // compile
     for (const EVM2::Instruction& i : instructions)
     {
         mapping.insert({i.bitOffset, jit.getCurrentIndex()});
@@ -164,32 +165,59 @@ int main()
                 jit.funcEpilogue();
                 jit.ret();
                 break;
+            case EVM2::Op::CREATETHREAD:
+                assert(i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::ADDR && i.args[1].kind == EVM2::Arg::Kind::REG);
+                fixups.push_back({jit.hostCallWithReturnRegsImm((uintptr_t)host_thread_create, i.args[1].reg, 0), i.args[0].addr});
+                break;
+            case EVM2::Op::JOINTHREAD:
+                assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::REG);
+                jit.hostCallWithRegs((uintptr_t)host_thread_join, i.args[0].reg);
+                break;
             default:
                 assert(0);
         }
         jit.nop();
     }
-    
     jit.end();
-
+    
+    // patch branches and immediates
     for (const auto [instruction, target] : fixups)
     {
         auto it = mapping.find(target);
         assert(it != mapping.end());
-        jit.patchBranch(instruction, it->second);
+        jit.patchBranchOrImm(instruction, it->second);
     }
+    
+    // finalize
+    void* func = jit.finalize();
+    assert(func);
+
+    return (JITFunction)func;
+}
+
+int main()
+{
+//    EVM2::Disassembler disasm("fibonacci_loop.evm");
+//    EVM2::Disassembler disasm("math.evm");
+//    EVM2::Disassembler disasm("memory.evm");
+//    EVM2::Disassembler disasm("xor.evm");
+//    EVM2::Disassembler disasm("xor-with-stack-frame.evm");
+    EVM2::Disassembler disasm("threadingBase.evm");
+    disasm.print();
+
+    // Get the instructions
+    ARM64JITFrontend jit;
+    JITFunction func = Compile(disasm, jit);
     
     uint8_t memory[1024*1024];
     uint64_t registers[16];
     memset(registers, 0, sizeof(registers));
-    void* func = jit.finalize();
-    assert(func);
     printf("Executing...\n");
     
     // Set up the jump point
     if (setjmp(halt_jmp_buf) == 0) {
         // First time through - execute the JIT code
-        ((JITFunction)func)(memory, registers, 0);
+        func(memory, registers, jit.entry());
         printf("JIT code returned normally (no HALT encountered)\n");
     } else {
         // Returned via longjmp from host_terminate

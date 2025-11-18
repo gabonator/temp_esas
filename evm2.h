@@ -320,9 +320,20 @@ private:
                     }
                     break;
                 }
+                case Op::CREATETHREAD: {
+                    // First operand: 32-bit address (little-endian at bit level)
+                    auto aopt = br.readBitsLEbits(32);
+                    if (!aopt) return out;
+                    Arg ad; ad.kind = Arg::Kind::ADDR; ad.addr = (uint32_t)(*aopt);
+                    ins.args.push_back(ad);
+                    // Second operand: register
+                    auto a = readDataArg(br);
+                    if (!a) return out;
+                    ins.args.push_back(*a);
+                    break;
+                }
                 case Op::CONSOLEREAD:
                 case Op::CONSOLEWRITE:
-                case Op::CREATETHREAD:
                 case Op::JOINTHREAD:
                 case Op::SLEEP:
                 case Op::LOCK:
