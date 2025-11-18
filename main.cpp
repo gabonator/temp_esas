@@ -53,13 +53,37 @@ int main()
     ARM64JITFrontend jit;
     jit.begin();
 
-    std::vector<std::pair<size_t, uint32_t>> fixups;
-    std::map<uint32_t, size_t> mapping;
-    
+    std::vector<std::pair<size_t, EVM2::Arg::addr_t>> fixups;
+    std::map<EVM2::Arg::addr_t, size_t> mapping;
+    std::map<EVM2::Arg::addr_t, char> labels;
+
+    // Identify call/jump labels
     const auto& instructions = disasm.getInstructions();
     for (const EVM2::Instruction& i : instructions)
     {
+        switch (i.opcode)
+        {
+            case EVM2::Op::JUMPEQ:
+                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
+                assert(labels[i.args[0].addr] != 'C');
+                labels[i.args[0].addr] = 'G';
+                break;
+            case EVM2::Op::CALL:
+                assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
+                assert(labels[i.args[0].addr] != 'G');
+                labels[i.args[0].addr] = 'C';
+                break;
+            default:
+                break;
+        }
+    }
+
+    for (const EVM2::Instruction& i : instructions)
+    {
         mapping.insert({i.bitOffset, jit.getCurrentIndex()});
+        
+        if (auto it = labels.find(i.bitOffset); it != labels.end() && it->second == 'C')
+            jit.funcPrologue();
         
         switch (i.opcode)
         {
@@ -84,9 +108,9 @@ int main()
                 if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG)
                     jit.mov(i.args[1].reg, i.args[0].reg);
                 else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::MEM)
-                    jit.storeMemoryReg(i.args[0].reg, i.args[0].addr, i.args[1].sizeBytes*8);
+                    jit.storeMemoryReg(i.args[0].reg, i.args[1].reg, i.args[1].sizeBytes*8);
                 else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::MEM && i.args[1].kind == EVM2::Arg::Kind::REG)
-                    jit.loadMemoryReg(i.args[1].reg, i.args[0].addr, i.args[0].sizeBytes*8);
+                    jit.loadMemoryReg(i.args[1].reg, i.args[0].reg, i.args[0].sizeBytes*8);
                 else
                     assert(0);
                 break;
@@ -133,14 +157,17 @@ int main()
                 jit.hostCall((uintptr_t)host_terminate);
                 break;
             case EVM2::Op::CALL:
+                assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
                 fixups.push_back({jit.call(), i.args[0].addr});
                 break;
             case EVM2::Op::RET:
+                jit.funcEpilogue();
                 jit.ret();
                 break;
             default:
                 assert(0);
         }
+        jit.nop();
     }
     
     jit.end();

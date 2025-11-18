@@ -579,6 +579,22 @@ public:
         return 0xD65F03C0;
     }
     
+    static uint32_t gen_nop() {
+        return 0xD503201F;
+    }
+
+    static uint32_t gen_prologue1() {
+        return 0xA9BF7BF0; // stp x29, x30, [sp, #-16]!
+    }
+    
+    static uint32_t gen_prologue2() {
+        return 0x910003FD; // mov x29, sp
+    }
+    
+    static uint32_t gen_epilogue() {
+        return 0xA8C17BF0; // ldp x29, x30, [sp], #16
+    }
+
     /**
      * RET Xn
      * Return from subroutine using specific register

@@ -313,9 +313,10 @@ public:
     }
 #endif
     // TODO: add comment
-    void storeMemoryReg(int src_reg, uint64_t address, int size) {
+    void storeMemoryReg(int src_reg, uint64_t address_reg, int size) {
         loadRegister(src_reg, 2);
-        emit_load_imm64(3, address);
+        loadRegister(address_reg, 3);
+//        emit_load_imm64(3, address);
         emit(ARM64Backend::gen_reg_mem(2, 19, 3, false, size));
     }
     
@@ -564,7 +565,22 @@ public:
     void ret() {
         emit(ARM64Backend::gen_ret());
     }
+
+    void nop() {
+        emit(ARM64Backend::gen_nop());
+    }
     
+    void funcPrologue()
+    {
+        emit(ARM64Backend::gen_prologue1());
+        emit(ARM64Backend::gen_prologue2());
+    }
+
+    void funcEpilogue()
+    {
+        emit(ARM64Backend::gen_epilogue());
+    }
+
     /**
      * Patch a branch instruction at branch_index to target target_index
      */

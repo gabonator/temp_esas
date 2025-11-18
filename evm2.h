@@ -54,11 +54,12 @@ string opToString(Op o) {
 };
 
 struct Arg {
+    typedef uint32_t addr_t;
     enum class Kind { REG, MEM, CONST, ADDR } kind;
     uint8_t reg = 0;
     uint8_t sizeBytes = 0;
     int64_t constValue = 0;
-    uint32_t addr = 0;
+    addr_t addr = 0;
     
     string toString() const {
         switch (kind) {
