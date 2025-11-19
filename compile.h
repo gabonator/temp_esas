@@ -1,11 +1,6 @@
 #include <map>
 
 typedef void (*JITFunction)(void* memory, uint64_t* registers, size_t entry_point);
-//void host_print_value(uint64_t value);
-//uint64_t host_read_value();
-//void host_terminate(uint64_t value);
-//uint64_t host_thread_create(uint64_t label);
-//void host_thread_join(uint64_t id);
 
 struct JITInterface_t
 {
@@ -17,6 +12,8 @@ struct JITInterface_t
     void (*thread_sleep)(uint64_t ms);
     void (*thread_lock)(uint64_t id);
     void (*thread_unlock)(uint64_t id);
+    uint64_t (*file_read)(uint64_t ofs, uint64_t toRead, uint64_t addr);
+    void (*file_write)(uint64_t ofs, uint64_t toWrite, uint64_t addr);
 };
 
 JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JITInterface_t& iface)
@@ -120,7 +117,7 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
                 jit.ret();
                 break;
             case EVM2::Op::CREATETHREAD:
-                assert(i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::ADDR && i.args[1].kind == EVM2::Arg::Kind::REG);
+                assert(i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
                 fixups.push_back({jit.hostCallWithOps((uintptr_t)iface.thread_create, i.args[1], i.args[0]), i.args[0].addr});
                 break;
             case EVM2::Op::JOINTHREAD:
@@ -138,6 +135,14 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
             case EVM2::Op::SLEEP:
                 assert(i.args.size() == 1);
                 jit.hostCallWithOps((uintptr_t)iface.thread_sleep, {}, i.args[0]);
+                break;
+            case EVM2::Op::READ:
+                assert(i.args.size() == 4);
+                jit.hostCallWithOps((uintptr_t)iface.file_read, i.args[3], i.args[0], i.args[1], i.args[2]);
+                break;
+            case EVM2::Op::WRITE:
+                assert(i.args.size() == 3);
+                jit.hostCallWithOps((uintptr_t)iface.file_write, {}, i.args[0], i.args[1], i.args[2]);
                 break;
             default:
                 assert(0);

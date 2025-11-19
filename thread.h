@@ -135,7 +135,8 @@ public:
         if (it != gThreadRegistry.end()) {
             return it->second;
         }
-        assert(0);
+        // could be already finished
+        //assert(0);
         return {};
     }
 

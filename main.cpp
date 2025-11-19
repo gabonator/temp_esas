@@ -42,6 +42,8 @@ public:
 
 uint8_t memory[1024*1024];
 JITFunction func;
+std::vector<uint8_t> file;
+
 int main()
 {
 //    EVM2::Disassembler disasm("fibonacci_loop.evm");
@@ -52,12 +54,15 @@ int main()
 //    EVM2::Disassembler disasm("threadingBase.evm");
     //EVM2::Disassembler disasm("lock.evm");
 //    EVM2::Disassembler disasm("pseudorandom.evm");
-    
-    EVM2::Disassembler disasm("philosophers.evm");
+//    EVM2::Disassembler disasm("philosophers.evm"); // bad
 //    EVM2::Disassembler disasm("crc.evm");
-//    EVM2::Disassembler disasm("multithreaded_file_write.evm");
+    EVM2::Disassembler disasm("multithreaded_file_write.evm");
     disasm.print();
+    memset(memory, 0, disasm.getHeader().dataSize);
+    memcpy(memory, &disasm.getData()[0], disasm.getData().size());
 
+    
+    static std::mutex mutexIo;
     // Compile the JIT code
     ARM64JITFrontend jit;
     JITInterface_t iface = {
@@ -94,7 +99,9 @@ int main()
             return thread->run();
         },
         .thread_join = [](uint64_t tid) {
-            CThread::getById(tid)->join();
+            std::shared_ptr<CThread> thread = CThread::getById(tid);
+            if (thread)
+                thread->join();
         },
         .thread_sleep = [](uint64_t milliseconds) {
             if (CThread::getCurrent()->shouldStop)
@@ -110,6 +117,24 @@ int main()
         .thread_unlock = [](uint64_t lid) {
             CThread::getCurrent()->unlock(lid);
         },
+        .file_read = [](uint64_t ofs, uint64_t toRead, uint64_t addr) -> uint64_t {
+            if (file.size() == 0)
+            {
+                std::lock_guard<std::mutex> lock(mutexIo);
+                EVM2::Disassembler::readFile("crc.bin", file);
+            }
+            int willRead = std::min(toRead, file.size() - ofs);
+            for (int i=0; i<willRead; i++)
+                memory[addr+i] = file[ofs+i];
+            return std::max(0, willRead);
+        },
+        .file_write = [](uint64_t ofs, uint64_t toWrite, uint64_t addr) {
+            std::lock_guard<std::mutex> lock(mutexIo);
+            if (ofs+toWrite > file.size())
+                file.resize(ofs+toWrite);
+            for (int i=0; i<toWrite; i++)
+                file[ofs+i] = memory[addr+i];
+        }
     };
     
     func = Compile(disasm, jit, iface);
@@ -121,5 +146,16 @@ int main()
     mainThread->run();
     mainThread->join();  // Wait for thread to complete
         
+    if (file.size() != 0 && file.size() != 16)
+    {
+        printf("File contents:\n");
+        for (int i=0; i<file.size(); i++)
+        {
+            printf("%02x ", file[i]);
+            if (i%16==15)
+                printf("\n");
+        }
+        printf("\n");
+    }
     return 0;
 }

@@ -581,12 +581,15 @@ public:
      * void (*func)(uint64_t regs[16])
      */
 
-    size_t hostCallWithOps(uint64_t func_ptr, const Operand& ret, const Operand& op)
+    size_t hostCallWithOps(uint64_t func_ptr, const Operand& ret, const Operand& op1, const Operand& op2 = {}, const Operand& op3 = {}, const Operand& op4 = {})
     {
         size_t pos = getCurrentIndex();
         // must be at first place - we will be patching address for start thread
-        loadOperand(op, 0);
-        
+        loadOperand(op1, 0);
+        loadOperand(op2, 1);
+        loadOperand(op3, 2);
+        loadOperand(op4, 3);
+
         emit_load_imm64(9, func_ptr);
         emit(ARM64Backend::gen_blr(9));
         storeOperand(ret, 0);

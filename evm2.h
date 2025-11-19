@@ -79,12 +79,6 @@ struct Instruction {
     vector<Arg> args;
 };
 
-struct FileHeader {
-    uint32_t codeSize;
-    uint32_t dataSize;
-    uint32_t initialDataSize;
-};
-
 class BitReader {
 private:
     const vector<uint8_t>& bytes;
@@ -166,7 +160,6 @@ static const vector<pair<string, Op>> opcodeTable = {
 };
 
 class Disassembler {
-private:
     struct Header {
         char magic[8];
         uint32_t codeSize;
@@ -174,10 +167,10 @@ private:
         uint32_t initialDataSize;
     };
     
-    static uint32_t readLE32(const uint8_t* p) {
-        return uint32_t(p[0]) | (uint32_t(p[1])<<8) | (uint32_t(p[2])<<16) | (uint32_t(p[3])<<24);
-    }
-    
+    Header mHeader;
+    std::vector<uint8_t> mData;
+
+public:
     static bool readFile(const string& path, vector<uint8_t>& out) {
         ifstream f(path, ios::binary);
         if (!f) return false;
@@ -188,7 +181,12 @@ private:
         f.read((char*)out.data(), sz);
         return true;
     }
-    
+
+private:
+    static uint32_t readLE32(const uint8_t* p) {
+        return uint32_t(p[0]) | (uint32_t(p[1])<<8) | (uint32_t(p[2])<<16) | (uint32_t(p[3])<<24);
+    }
+        
     static pair<Op, unsigned> readOpcode(BitReader& br) {
         string bits;
         for (unsigned i = 0; i < 6; ++i) {
@@ -366,33 +364,6 @@ private:
     }
     
 public:
-    // Read only the header information from an EVM2 file
-    static FileHeader readHeader(const string& filename) {
-        vector<uint8_t> file;
-        if (!readFile(filename, file)) {
-            throw runtime_error("Cannot open file: " + filename);
-        }
-        
-        if (file.size() < sizeof(Header)) {
-            throw runtime_error("File too small");
-        }
-        
-        Header hdr;
-        memcpy(&hdr, file.data(), sizeof(Header));
-        
-        if (string(hdr.magic, hdr.magic+8) != "ESET-VM2") {
-            throw runtime_error("Invalid magic number");
-        }
-        
-        FileHeader result;
-        result.codeSize = readLE32((uint8_t*)&file[8]);
-        result.dataSize = readLE32((uint8_t*)&file[12]);
-        result.initialDataSize = readLE32((uint8_t*)&file[16]);
-        
-        return result;
-    }
-    
-    // Constructor that takes a filename and disassembles the file
     explicit Disassembler(const string& filename) {
         vector<uint8_t> file;
         if (!readFile(filename, file)) {
@@ -403,22 +374,25 @@ public:
             throw runtime_error("File too small");
         }
         
-        Header hdr;
-        memcpy(&hdr, file.data(), sizeof(Header));
+        memcpy(&mHeader, file.data(), sizeof(mHeader));
         
-        if (string(hdr.magic, hdr.magic+8) != "ESET-VM2") {
+        if (string(mHeader.magic, mHeader.magic+8) != "ESET-VM2") {
             throw runtime_error("Invalid magic number");
         }
         
-        uint32_t codeSize = readLE32((uint8_t*)&file[8]);
         size_t codeOffset = sizeof(Header);
-        if (file.size() < codeOffset + codeSize) {
+        if (file.size() < codeOffset + mHeader.codeSize)
             throw runtime_error("Truncated file");
-        }
-        
-        vector<uint8_t> code(codeSize);
-        memcpy(code.data(), file.data() + codeOffset, codeSize);
-        
+
+        if (file.size() != codeOffset + mHeader.codeSize + mHeader.initialDataSize)
+            throw runtime_error("Truncated file");
+
+        vector<uint8_t> code(mHeader.codeSize);
+        memcpy(code.data(), file.data() + codeOffset, mHeader.codeSize);
+
+        mData.resize(mHeader.dataSize);
+        memcpy(mData.data(), file.data() + codeOffset + mHeader.codeSize, mHeader.initialDataSize);
+
         instructions = disassembleCode(code);
     }
     
@@ -444,6 +418,16 @@ public:
         }
     }
     
+    const std::vector<uint8_t>& getData()
+    {
+        return mData;
+    }
+    
+    const Header& getHeader()
+    {
+        return mHeader;
+    }
+
 private:
     vector<Instruction> instructions;
 };
