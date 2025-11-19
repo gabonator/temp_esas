@@ -55,7 +55,7 @@ string opToString(Op o) {
 
 struct Arg {
     typedef uint32_t addr_t;
-    enum class Kind { REG, MEM, CONST, ADDR } kind;
+    enum class Kind { NONE, REG, MEM, CONST, ADDR } kind = Kind::NONE;
     uint8_t reg = 0;
     uint8_t sizeBytes = 0;
     int64_t constValue = 0;
@@ -63,6 +63,7 @@ struct Arg {
     
     string toString() const {
         switch (kind) {
+            case Kind::NONE: return "none";
             case Kind::REG: return "reg" + to_string(reg);
             case Kind::MEM: return to_string(sizeBytes) + "-byte[memReg" + to_string(reg) + "]";
             case Kind::CONST: return "const(" + to_string(constValue) + ")";
