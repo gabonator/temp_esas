@@ -1,0 +1,12 @@
+.dataSize 65536
+.code
+
+loadConst 1, r0
+loadConst 65536, r1
+
+# reading outside memory range -> exception
+mov r0, byte[r1]
+# writing outside memory range -> exception
+mov byte[r1], r0
+
+hlt

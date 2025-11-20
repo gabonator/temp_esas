@@ -11,6 +11,8 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <pthread.h>
+#include <cstdio>
+#include <cinttypes>
 
 #include "evm2.h"
 #include "jit_arm64_fe.h"
@@ -52,14 +54,15 @@ public:
     }
 };
 
-//uint8_t memory[1024*1024];
-JITFunction func;
-std::vector<uint8_t> file;
-
-void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
+void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32, std::string _payload)
 {
+    JITFunction func;
     static std::mutex mutexIo;
-    
+    static FILE* f;
+    static std::string payload;
+    f = nullptr;
+    payload = _payload;
+
     // Compile the JIT code
     ARM64JITFrontend jit;
     JITInterface_t iface = {
@@ -68,19 +71,9 @@ void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
             fprintf(stdout, "[Thread %lld] Value: %lld / 0x%llx\n", CThread::currentThreadId, value, value);
         },
         .read_value = []() -> uint64_t {
-            std::this_thread::sleep_for(std::chrono::milliseconds(456));
-            static std::atomic<int> counter{0};
-            int count = counter.fetch_add(1);
-            return 10; // TODO:
-            switch (count)
-            {
-                case 0:
-                    return 17;
-                case 1:
-                    return 99;
-                default:
-                    return 0;
-            }
+            uint64_t value = 0;
+            scanf("%" SCNu64, &value);
+            return value;
         },
         .terminate = []() {
             fprintf(stderr, "[Terminate] Called from thread %lld\n", CThread::currentThreadId);
@@ -104,16 +97,6 @@ void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
                 current->config->terminate();
                 return;
             }
-// TODO: remove
-//            auto current = CThread::getCurrent();
-//            assert(current);
-//
-//            if (current->shouldStop)
-//            {
-//                current->config->terminate();
-//                return;
-//            }
-            
             std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
         },
         .thread_lock = [](uint64_t lid) {
@@ -127,15 +110,16 @@ void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
             auto currentThread = CThread::getCurrent();
             auto currentJitThread = std::dynamic_pointer_cast<JitThread>(currentThread->config);
             uint8_t* mem = currentJitThread->sharedMemory;
+            
+            if (!f)
+            {
+                assert(!payload.empty());
+                f = fopen(payload.c_str(), "rb");
+                assert(f);
+            }
 
-            if (file.size() == 0)
-                EVM2::Disassembler::readFile("crc.bin", file); // TODO:
-
-            int willRead = (int)std::min(toRead, file.size() - ofs);
-
-            for (int i=0; i<willRead; i++)
-                mem[addr+i] = file[ofs+i];
-            return std::max(0, willRead);
+            fseek(f, (long)ofs, SEEK_SET);
+            return fread(mem + addr, 1, toRead, f);  // Fixed: read 'toRead' items of size 1
         },
         .file_write = [](uint64_t ofs, uint64_t toWrite, uint64_t addr) {
             std::lock_guard<std::mutex> lock(mutexIo);
@@ -143,10 +127,15 @@ void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
             auto currentJitThread = std::dynamic_pointer_cast<JitThread>(currentThread->config);
             uint8_t* mem = currentJitThread->sharedMemory;
 
-            if (ofs+toWrite > file.size())
-                file.resize(ofs+toWrite);
-            for (int i=0; i<toWrite; i++)
-                file[ofs+i] = mem[addr+i];
+            if (!f)
+            {
+                assert(!payload.empty());
+                f = fopen(payload.c_str(), "wb");
+                assert(f);
+            }
+            
+            fseek(f, (long)ofs, SEEK_SET);
+            fwrite(mem+addr, toWrite, 1, f);
         }
     };
     
@@ -157,11 +146,15 @@ void RunTest(EVM2::Disassembler& disasm, uint8_t* memory32)
     auto mainThread = std::make_shared<CThread>(mainThreadConfig);
     mainThread->run();
     mainThread->join();  // Wait for thread to complete
+    
+    if (f)
+        fclose(f);
 }
 
-void RunGuard(EVM2::Disassembler& disasm)
+void RunGuard(EVM2::Disassembler& disasm, std::string payload, bool useFork = true)
 {
-    pid_t pid = fork();
+    pid_t pid = useFork ? fork() : 0;
+    
     if (pid == 0) {
         uint8_t* memory32 = nullptr;
         
@@ -186,13 +179,16 @@ void RunGuard(EVM2::Disassembler& disasm)
         if (auto data = disasm.getData(); !data.empty())
             memcpy(memory32, &data[0], data.size());
         
-        RunTest(disasm, memory32);
+        RunTest(disasm, memory32, payload);
         
         munmap(memory32, 1ULL<<32);
         fflush(stdout);
         fflush(stderr);
         _exit(0);
     }
+
+    if (!useFork)
+        return;
     
     int status = 0;
     waitpid(pid, &status, 0);
@@ -200,48 +196,33 @@ void RunGuard(EVM2::Disassembler& disasm)
     // Note: doesnt work inside xcode
     assert(WIFEXITED(status));
     int code = WEXITSTATUS(status);
-    if (code == 0) {
-        printf("JIT exited normally.\n");
-    } else if (code == 3) {
-        fprintf(stderr, "Child caught memory exception and exited with code %d\n", code);
-    } else {
+    if (code == 0)
+        fprintf(stderr, "JIT exited normally.\n");
+    else if (code == 3)
+        fprintf(stderr, "Child caught memory exception\n");
+    else if (code == 1)
+        fprintf(stderr, "JIT was terminated with hard timeout.\n");
+    else
         assert(0);
-    }
 }
 
-int main()
+int main(int argc, const char** argv)
 {
-//    EVM2::Disassembler disasm("fibonacci_loop.evm");
-//    EVM2::Disassembler disasm("math.evm");
-//    EVM2::Disassembler disasm("memory.evm");
-//    EVM2::Disassembler disasm("xor.evm");
-//    EVM2::Disassembler disasm("xor-with-stack-frame.evm");
-//    EVM2::Disassembler disasm("threadingBase.evm");
-    //EVM2::Disassembler disasm("lock.evm");
-//    EVM2::Disassembler disasm("pseudorandom.evm");
-//    EVM2::Disassembler disasm("philosophers.evm"); // bad
-//    EVM2::Disassembler disasm("crc.evm");
-//    EVM2::Disassembler disasm("multithreaded_file_write.evm");
+    std::string program;
+    std::string payload;
     
-//    EVM2::Disassembler disasm("gabo_boundary.evm"); // bad
-//    EVM2::Disassembler disasm("gabo_label.evm");
-    EVM2::Disassembler disasm("gabo_loop.evm");
-//    EVM2::Disassembler disasm("gabo_stack.evm"); // catch EXC_BAD_ACCESS
-//    EVM2::Disassembler disasm("gabo_thread.evm");
-    disasm.print();
-        
-    RunGuard(disasm);
-    
-    if (file.size() != 0 && file.size() != 16)
+    if (argc == 2)
     {
-        printf("File contents:\n");
-        for (int i=0; i<file.size(); i++)
-        {
-            printf("%02x ", file[i]);
-            if (i%16==15)
-                printf("\n");
-        }
-        printf("\n");
-    }
+        program = argv[1];
+    } else if (argc == 3) {
+        program = argv[1];
+        payload = argv[2];
+    } else
+        assert(0);
+    
+    EVM2::Disassembler disasm(program);
+        
+    RunGuard(disasm, payload);
+    
     return 0;
 }

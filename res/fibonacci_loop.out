@@ -1,0 +1,33 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Terminate] Called from thread 1
+[Thread 1] Halted via terminate
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+[Thread 1] Value: 1 / 0x1
+[Thread 1] Value: 1 / 0x1
+[Thread 1] Value: 2 / 0x2
+[Thread 1] Value: 3 / 0x3
+[Thread 1] Value: 5 / 0x5
+[Thread 1] Value: 8 / 0x8
+[Thread 1] Value: 13 / 0xd
+[Thread 1] Value: 21 / 0x15
+[Thread 1] Value: 34 / 0x22
+[Thread 1] Value: 55 / 0x37
+[Thread 1] Value: 89 / 0x59
+[Thread 1] Value: 144 / 0x90
+[Thread 1] Value: 233 / 0xe9
+[Thread 1] Value: 377 / 0x179
+[Thread 1] Value: 610 / 0x262
+[Thread 1] Value: 987 / 0x3db
+[Thread 1] Value: 1597 / 0x63d
+[Thread 1] Value: 2584 / 0xa18
+[Thread 1] Value: 4181 / 0x1055
+[Thread 1] Value: 6765 / 0x1a6d
+[Thread 1] Value: 10946 / 0x2ac2
+[Thread 1] Value: 17711 / 0x452f
+[Thread 1] Value: 28657 / 0x6ff1
+[Thread 1] Value: 46368 / 0xb520
+[Thread 1] Value: 75025 / 0x12511
+JIT exited normally.

@@ -79,7 +79,7 @@ public:
         pthread_attr_setstacksize(&attr, maxStack);
                 
         registerThread();
-        nativeThread = std::thread([this, &promiseRet]() {
+        nativeThread = std::thread([this]() {
             currentThreadId = threadId;
             
             // Execute with timeout using async

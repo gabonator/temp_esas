@@ -1,0 +1,2411 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Thread 2] Start...
+[GLOBAL] register threadId 2
+[Thread 3] Start...
+[GLOBAL] register threadId 3
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 4] Start...
+[GLOBAL] register threadId 4
+[Thread 3] Locking object 1
+[Thread 2] Locked object 1
+[Thread 5] Start...
+[GLOBAL] register threadId 5
+[Thread 6] Start...
+[GLOBAL] register threadId 6
+[Thread 4] Locking object 2
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 4] Locked object 3
+[Thread 7] Start...
+[GLOBAL] register threadId 7
+[Thread 5] Locking object 3
+[Thread 8] Start...
+[GLOBAL] register threadId 8
+[Thread 6] Locking object 4
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 6] Locked object 5
+[Thread 9] Start...
+[GLOBAL] register threadId 9
+[Thread 8] Locking object 6
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 7] Locking object 5
+[Thread 8] Locked object 7
+[Thread 10] Start...
+[GLOBAL] register threadId 10
+[Thread 9] Locking object 7
+[Thread 11] Start...
+[GLOBAL] register threadId 11
+[Thread 12] Start...
+[GLOBAL] register threadId 12
+[Thread 13] Start...
+[GLOBAL] register threadId 13
+[Thread 10] Locking object 8
+[Thread 12] Locking object 10
+[Thread 12] Locked object 10
+[Thread 11] Locking object 9
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 13] Locking object 11
+[Thread 12] Locking object 11
+[Thread 14] Start...
+[GLOBAL] register threadId 14
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 13] Locked object 12
+[Thread 15] Start...
+[GLOBAL] register threadId 15
+[Thread 16] Start...
+[GLOBAL] register threadId 16
+[Thread 17] Start...
+[GLOBAL] register threadId 17
+[Thread 14] Locking object 12
+[Thread 18] Start...
+[GLOBAL] register threadId 18
+[Thread 15] Locking object 13
+[Thread 16] Locking object 14
+[Thread 19] Start...
+[GLOBAL] register threadId 19
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 20] Start...
+[Thread 15] Locked object 13
+[GLOBAL] register threadId 20
+[Thread 17] Locking object 15
+[Thread 16] Locked object 15
+[Thread 19] Locking object 17
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Start...
+[GLOBAL] register threadId 21
+[Thread 18] Locking object 16
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 15] Locking object 14
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 4] Locking object 2
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 4] Locked object 3
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 6] Locking object 4
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 6] Locked object 5
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 13] Locked object 12
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 16] Locking object 14
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 16] Locked object 15
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 5] Locked object 3
+[Thread 13] Locking object 11
+[Thread 16] Locking object 14
+[Thread 5] Locking object 4
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 15] Locked object 14
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 6] Locking object 4
+[Thread 18] Locking object 16
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 21] Unlocking object 19
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 20] Locked object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 3] Locking object 1
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 4] Locked object 2
+[Thread 12] Locking object 10
+[Thread 11] Locked object 10
+[Thread 2] Locked object 1
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 19] Locked object 18
+[Thread 4] Locking object 3
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 15] Unlocking object 13
+[Thread 20] Locking object 18
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 14] Locked object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 21] Locked object 20
+[Thread 11] Unlocking object 9
+[Thread 10] Locked object 9
+[Thread 11] Unlocking object 10
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 19] Unlocking object 17
+[Thread 18] Locked object 17
+[Thread 19] Unlocking object 18
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 15] Locked object 13
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 20] Locked object 19
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 15] Locking object 14
+[Thread 21] Locking object 19
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 20] Locked object 18
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 20] Locking object 19
+[Thread 12] Locked object 11
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 21] Locked object 20
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 16] Locking object 14
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 15] Unlocking object 13
+[Thread 11] Locked object 9
+[Thread 14] Locked object 13
+[Thread 15] Unlocking object 14
+[Thread 11] Locking object 10
+[Thread 10] Locking object 8
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 15] Locking object 13
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 12] Locked object 11
+[Thread 20] Unlocking object 18
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 19] Locked object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 21] Locked object 20
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 16] Locking object 14
+[Thread 12] Unlocking object 10
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 15] Locked object 14
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 4] Locked object 2
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 3] Locking object 1
+[Thread 2] Locked object 1
+[Thread 19] Locked object 18
+[Thread 4] Locking object 3
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 5] Locking object 3
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 4] Locked object 3
+[Thread 17] Unlocking object 15
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 17] Unlocking object 16
+[Thread 17] Locking object 15
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 16] Locked object 15
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 14] Unlocking object 12
+[Thread 21] Locking object 19
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 20] Locked object 19
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 20] Locking object 18
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 2] Locked object 1
+[Thread 3] Locking object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 15] Locking object 13
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 11] Locking object 9
+[Thread 10] Locked object 9
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 21] Locked object 20
+[Thread 7] Unlocking object 5
+[Thread 18] Locking object 16
+[Thread 7] Unlocking object 6
+[Thread 7] Locking object 5
+[Thread 6] Locked object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 9] Locked object 8
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 21] Locked object 20
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 12] Locking object 10
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 4] Unlocking object 2
+[Thread 16] Locking object 15
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 21] Unlocking object 19
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 20] Locked object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 4] Locking object 2
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 17] Locked object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 3] Locking object 1
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 2] Locked object 1
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 21] Locked object 20
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 9] Locking object 7
+[Thread 8] Locked object 7
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 13] Unlocking object 11
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 12] Locked object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 20] Locked object 19
+[Thread 21] Locking object 19
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 2] Unlocking object 0
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 2] Unlocking object 1
+[Thread 6] Locking object 4
+[Thread 2] Locking object 0
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 12] Unlocking object 10
+[Thread 8] Locking object 6
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 20] Unlocking object 18
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 12] Locking object 10
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 19] Unlocking object 17
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 19] Unlocking object 18
+[Thread 19] Locking object 17
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 18] Locked object 17
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 4] Locking object 2
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 14] Locked object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 6] Locked object 5
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 3] Locking object 1
+[Thread 2] Locked object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 18] Locked object 17
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 6] Unlocking object 4
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 5] Locked object 4
+[Thread 6] Unlocking object 5
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 21] Locked object 20
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 8] Locked object 7
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 5] Locking object 3
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 12] Locked object 11
+[Thread 4] Locked object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 18] Locked object 17
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 8] Locking object 6
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 8] Locked object 7
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 12] Locking object 10
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 5] Locked object 3
+[Thread 4] Locking object 2
+[Thread 17] Locked object 16
+[Thread 21] Unlocking object 19
+[Thread 5] Locking object 4
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 2] Value: 0 / 0x0
+[Thread 4] Value: 2 / 0x2
+[Thread 6] Value: 4 / 0x4
+[Thread 8] Value: 6 / 0x6
+[Thread 13] Value: 11 / 0xb
+[Thread 16] Value: 14 / 0xe
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 4] Value: 2 / 0x2
+[Thread 6] Value: 4 / 0x4
+[Thread 13] Value: 11 / 0xb
+[Thread 18] Value: 16 / 0x10
+[Thread 16] Value: 14 / 0xe
+[Thread 21] Value: 19 / 0x13
+[Thread 3] Value: 1 / 0x1
+[Thread 12] Value: 10 / 0xa
+[Thread 15] Value: 13 / 0xd
+[Thread 20] Value: 18 / 0x12
+[Thread 11] Value: 9 / 0x9
+[Thread 2] Value: 0 / 0x0
+[Thread 19] Value: 17 / 0x11
+[Thread 14] Value: 12 / 0xc
+[Thread 21] Value: 19 / 0x13
+[Thread 10] Value: 8 / 0x8
+[Thread 18] Value: 16 / 0x10
+[Thread 13] Value: 11 / 0xb
+[Thread 20] Value: 18 / 0x12
+[Thread 9] Value: 7 / 0x7
+[Thread 17] Value: 15 / 0xf
+[Thread 21] Value: 19 / 0x13
+[Thread 12] Value: 10 / 0xa
+[Thread 8] Value: 6 / 0x6
+[Thread 20] Value: 18 / 0x12
+[Thread 16] Value: 14 / 0xe
+[Thread 11] Value: 9 / 0x9
+[Thread 7] Value: 5 / 0x5
+[Thread 19] Value: 17 / 0x11
+[Thread 15] Value: 13 / 0xd
+[Thread 21] Value: 19 / 0x13
+[Thread 10] Value: 8 / 0x8
+[Thread 6] Value: 4 / 0x4
+[Thread 18] Value: 16 / 0x10
+[Thread 9] Value: 7 / 0x7
+[Thread 14] Value: 12 / 0xc
+[Thread 21] Value: 19 / 0x13
+[Thread 13] Value: 11 / 0xb
+[Thread 5] Value: 3 / 0x3
+[Thread 17] Value: 15 / 0xf
+[Thread 8] Value: 6 / 0x6
+[Thread 20] Value: 18 / 0x12
+[Thread 16] Value: 14 / 0xe
+[Thread 12] Value: 10 / 0xa
+[Thread 19] Value: 17 / 0x11
+[Thread 4] Value: 2 / 0x2
+[Thread 21] Value: 19 / 0x13
+[Thread 7] Value: 5 / 0x5
+[Thread 11] Value: 9 / 0x9
+[Thread 15] Value: 13 / 0xd
+[Thread 6] Value: 4 / 0x4
+[Thread 18] Value: 16 / 0x10
+[Thread 3] Value: 1 / 0x1
+[Thread 20] Value: 18 / 0x12
+[Thread 5] Value: 3 / 0x3
+[Thread 17] Value: 15 / 0xf
+[Thread 10] Value: 8 / 0x8
+[Thread 14] Value: 12 / 0xc
+[Thread 2] Value: 0 / 0x0
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 9] Value: 7 / 0x7
+[Thread 4] Value: 2 / 0x2
+[Thread 16] Value: 14 / 0xe
+[Thread 13] Value: 11 / 0xb
+[Thread 20] Value: 18 / 0x12
+[Thread 3] Value: 1 / 0x1
+[Thread 8] Value: 6 / 0x6
+[Thread 12] Value: 10 / 0xa
+[Thread 15] Value: 13 / 0xd
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 2] Value: 0 / 0x0
+[Thread 11] Value: 9 / 0x9
+[Thread 18] Value: 16 / 0x10
+[Thread 7] Value: 5 / 0x5
+[Thread 14] Value: 12 / 0xc
+[Thread 20] Value: 18 / 0x12
+[Thread 13] Value: 11 / 0xb
+[Thread 10] Value: 8 / 0x8
+[Thread 17] Value: 15 / 0xf
+[Thread 21] Value: 19 / 0x13
+[Thread 6] Value: 4 / 0x4
+[Thread 5] Value: 3 / 0x3
+[Thread 16] Value: 14 / 0xe
+[Thread 9] Value: 7 / 0x7
+[Thread 12] Value: 10 / 0xa
+[Thread 20] Value: 18 / 0x12
+[Thread 4] Value: 2 / 0x2
+[Thread 15] Value: 13 / 0xd
+[Thread 8] Value: 6 / 0x6
+[Thread 19] Value: 17 / 0x11
+[Thread 11] Value: 9 / 0x9
+[Thread 21] Value: 19 / 0x13
+[Thread 18] Value: 16 / 0x10
+[Thread 14] Value: 12 / 0xc
+[Thread 3] Value: 1 / 0x1
+[Thread 20] Value: 18 / 0x12
+[Thread 10] Value: 8 / 0x8
+[Thread 7] Value: 5 / 0x5
+[Thread 17] Value: 15 / 0xf
+[Thread 6] Value: 4 / 0x4
+[Thread 2] Value: 0 / 0x0
+[Thread 9] Value: 7 / 0x7
+[Thread 13] Value: 11 / 0xb
+[Thread 21] Value: 19 / 0x13
+[Thread 16] Value: 14 / 0xe
+[Thread 8] Value: 6 / 0x6
+[Thread 12] Value: 10 / 0xa
+[Thread 20] Value: 18 / 0x12
+[Thread 5] Value: 3 / 0x3
+[Thread 15] Value: 13 / 0xd
+[Thread 4] Value: 2 / 0x2
+[Thread 7] Value: 5 / 0x5
+[Thread 11] Value: 9 / 0x9
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 3] Value: 1 / 0x1
+[Thread 18] Value: 16 / 0x10
+[Thread 10] Value: 8 / 0x8
+[Thread 14] Value: 12 / 0xc
+[Thread 6] Value: 4 / 0x4
+[Thread 20] Value: 18 / 0x12
+[Thread 9] Value: 7 / 0x7
+[Thread 2] Value: 0 / 0x0
+[Thread 18] Value: 16 / 0x10
+[Thread 13] Value: 11 / 0xb
+[Thread 5] Value: 3 / 0x3
+[Thread 21] Value: 19 / 0x13
+[Thread 8] Value: 6 / 0x6
+[Thread 21] Value: 19 / 0x13
+[Thread 12] Value: 10 / 0xa
+[Thread 4] Value: 2 / 0x2
+[Thread 18] Value: 16 / 0x10
+[Thread 8] Value: 6 / 0x6
+[Thread 11] Value: 9 / 0x9
+[Thread 3] Value: 1 / 0x1
+[Thread 17] Value: 15 / 0xf
+[Thread 20] Value: 18 / 0x12
+[Thread 16] Value: 14 / 0xe
+[Thread 19] Value: 17[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 7] Locked object 6
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 3] Locking object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 2] Locked object 1
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 16] Locking object 14
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 18] Locked object 17
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 10] Locking object 8
+[Thread 9] Locked object 8
+[Thread 19] Locking object 17
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 15] Locked object 14
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 6] Unlocking object 4
+[Thread 5] Locked object 4
+[Thread 6] Unlocking object 5
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 14] Locked object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 5] Unlocking object 3
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 20] Locking object 18
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 21] Locked object 20
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 13] Locking object 11
+[Thread 12] Locked object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 20] Locked object 19
+[Thread 21] Locking object 19
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 2] Locked object 1
+[Thread 3] Locking object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 14] Locked object 13
+[Thread 19] Locking object 18
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 19] Locked object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 14] Locking object 12
+[Thread 13] Locked object 12
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 19] Locking object 17
+[Thread 18] Locked object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 15] Unlocking object 13
+[Thread 19] Locked object 18
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 21] Locked object 20
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 12] Locking object 10
+[Thread 11] Locked object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 3] Unlocking object 1
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 9] Locking object 7
+[Thread 2] Locked object 1
+[Thread 3] Unlocking object 2
+[Thread 3] Locking object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 11] Unlocking object 9
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 10] Locked object 9
+[Thread 11] Unlocking object 10
+[Thread 11] Locking object 9
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 14] Locking object 12
+[Thread 21] Locked object 20
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 8] Locking object 6
+[Thread 7] Locked object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 14] Locked object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 21] Locked object 20
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 17] Locking object 15
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 13] Locking object 12
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 20] Locked object 19
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 10] Unlocking object 8
+[Thread 20] Locking object 18
+[Thread 10] Unlocking object 9
+[Thread 10] Locking object 8
+[Thread 21] Locked object 20
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 9] Locked object 8
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 8] Locked object 7
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 2] Locked object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 3] Locking object 1
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 11] Locking object 9
+[Thread 10] Locked object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 21] Locked object 20
+[Thread 16] Locking object 14
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 7] Locked object 6
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 2] Locked object 1
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 5] Locking object 3
+[Thread 4] Locked object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 21] Unlocking object 19
+[Thread 19] Locking object 17
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 12] Unlocking object 10
+[Thread 14] Locked object 13
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 7] Unlocking object 5
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 21] Locked object 20
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 12] Locking object 10
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 14] Unlocking object 12
+[Thread 13] Locked object 12
+[Thread 14] Unlocking object 13
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 6] Unlocking object 4
+[Thread 5] Locked object 4
+[Thread 6] Unlocking object 5
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 11] Locking object 9
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 17] Locked object 16
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 10] Locking object 8
+[Thread 9] Locked object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 4] Locking object 2
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 16] Locking object 14
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 9] Locking object 7
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 8] Locked object 7
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 18] Locking object 16
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 8] Locking object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 10] Unlocking object 8
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 14] Locking object 12
+[Thread 10] Locking object 8
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 11] Locked object 9
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 11] Locking object 10
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 16] Locking object 14
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 9] Locking object 7
+[Thread 8] Locked object 7
+[Thread 15] Locked object 14
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 5] Locked object 4
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 2] Locked object 1
+[Thread 3] Locking object 1
+[Thread 18] Unlocking object 16
+[Thread 4] Locked object 2
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 4] Locking object 3
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 8] Unlocking object 6
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 7] Locked object 6
+ / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 7] Value: 5 / 0x5
+[Thread 2] Value: 0 / 0x0
+[Thread 10] Value: 8 / 0x8
+[Thread 21] Value: 19 / 0x13
+[Thread 6] Value: 4 / 0x4
+[Thread 18] Value: 16 / 0x10
+[Thread 9] Value: 7 / 0x7
+[Thread 15] Value: 13 / 0xd
+[Thread 20] Value: 18 / 0x12
+[Thread 8] Value: 6 / 0x6
+[Thread 5] Value: 3 / 0x3
+[Thread 14] Value: 12 / 0xc
+[Thread 17] Value: 15 / 0xf
+[Thread 19] Value: 17 / 0x11
+[Thread 4] Value: 2 / 0x2
+[Thread 21] Value: 19 / 0x13
+[Thread 16] Value: 14 / 0xe
+[Thread 13] Value: 11 / 0xb
+[Thread 7] Value: 5 / 0x5
+[Thread 3] Value: 1 / 0x1
+[Thread 18] Value: 16 / 0x10
+[Thread 21] Value: 19 / 0x13
+[Thread 12] Value: 10 / 0xa
+[Thread 15] Value: 13 / 0xd
+[Thread 6] Value: 4 / 0x4
+[Thread 20] Value: 18 / 0x12
+[Thread 2] Value: 0 / 0x0
+[Thread 17] Value: 15 / 0xf
+[Thread 14] Value: 12 / 0xc
+[Thread 11] Value: 9 / 0x9
+[Thread 5] Value: 3 / 0x3
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 16] Value: 14 / 0xe
+[Thread 13] Value: 11 / 0xb
+[Thread 10] Value: 8 / 0x8
+[Thread 4] Value: 2 / 0x2
+[Thread 18] Value: 16 / 0x10
+[Thread 20] Value: 18 / 0x12
+[Thread 12] Value: 10 / 0xa
+[Thread 15] Value: 13 / 0xd
+[Thread 9] Value: 7 / 0x7
+[Thread 3] Value: 1 / 0x1
+[Thread 17] Value: 15 / 0xf
+[Thread 19] Value: 17 / 0x11
+[Thread 14] Value: 12 / 0xc
+[Thread 21] Value: 19 / 0x13
+[Thread 11] Value: 9 / 0x9
+[Thread 8] Value: 6 / 0x6
+[Thread 2] Value: 0 / 0x0
+[Thread 16] Value: 14 / 0xe
+[Thread 10] Value: 8 / 0x8
+[Thread 18] Value: 16 / 0x10
+[Thread 13] Value: 11 / 0xb
+[Thread 21] Value: 19 / 0x13
+[Thread 7] Value: 5 / 0x5
+[Thread 15] Value: 13 / 0xd
+[Thread 20] Value: 18 / 0x12
+[Thread 9] Value: 7 / 0x7
+[Thread 17] Value: 15 / 0xf
+[Thread 6] Value: 4 / 0x4
+[Thread 12] Value: 10 / 0xa
+[Thread 14] Value: 12 / 0xc
+[Thread 5] Value: 3 / 0x3
+[Thread 19] Value: 17 / 0x11
+[Thread 16] Value: 14 / 0xe
+[Thread 21] Value: 19 / 0x13
+[Thread 11] Value: 9 / 0x9
+[Thread 8] Value: 6 / 0x6
+[Thread 13] Value: 11 / 0xb
+[Thread 4] Value: 2 / 0x2
+[Thread 10] Value: 8 / 0x8
+[Thread 18] Value: 16 / 0x10
+[Thread 15] Value: 13 / 0xd
+[Thread 7] Value: 5 / 0x5
+[Thread 20] Value: 18 / 0x12
+[Thread 12] Value: 10 / 0xa
+[Thread 21] Value: 19 / 0x13
+[Thread 9] Value: 7 / 0x7
+[Thread 17] Value: 15 / 0xf
+[Thread 3] Value: 1 / 0x1
+[Thread 6] Value: 4 / 0x4
+[Thread 14] Value: 12 / 0xc
+[Thread 11] Value: 9 / 0x9
+[Thread 20] Value: 18 / 0x12
+[Thread 16] Value: 14 / 0xe
+[Thread 8] Value: 6 / 0x6
+[Thread 2] Value: 0 / 0x0
+[Thread 5] Value: 3 / 0x3
+[Thread 13] Value: 11 / 0xb
+[Thread 10] Value: 8 / 0x8
+[Thread 19] Value: 17 / 0x11
+[Thread 15] Value: 13 / 0xd
+[Thread 21] Value: 19 / 0x13
+[Thread 7] Value: 5 / 0x5
+[Thread 2] Value: 0 / 0x0
+[Thread 4] Value: 2 / 0x2
+[Thread 12] Value: 10 / 0xa
+[Thread 9] Value: 7 / 0x7
+[Thread 18] Value: 16 / 0x10
+[Thread 14] Value: 12 / 0xc
+[Thread 11] Value: 9 / 0x9
+[Thread 6] Value: 4 / 0x4
+[Thread 21] Value: 19 / 0x13
+[Thread 8] Value: 6 / 0x6
+[Thread 20] Value: 18 / 0x12
+[Thread 13] Value: 11 / 0xb
+[Thread 5] Value: 3 / 0x3
+[Thread 10] Value: 8 / 0x8
+[Thread 17] Value: 15 / 0xf
+[Thread 7] Value: 5 / 0x5
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 16] Value: 14 / 0xe
+[Thread 12] Value: 10 / 0xa
+[Thread 4] Value: 2 / 0x2
+[Thread 9] Value: 7 / 0x7
+[Thread 6] Value: 4 / 0x4
+[Thread 21] Value: 19 / 0x13
+[Thread 18] Value: 16 / 0x10
+[Thread 15] Value: 13 / 0xd
+[Thread 11] Value: 9 / 0x9
+[Thread 8] Value: 6 / 0x6
+[Thread 5] Value: 3 / 0x3
+[Thread 20] Value: 18 / 0x12
+[Thread 17] Value: 15 / 0xf
+[Thread 14] Value: 12 / 0xc
+[Thread 7] Value: 5 / 0x5
+[Thread 10] Value: 8 / 0x8
+[Thread 4] Value: 2 / 0x2
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 16] Value: 14 / 0xe
+[Thread 13] Value: 11 / 0xb
+[Thread 9] Value: 7 / 0x7
+[Thread 6] Value: 4 / 0x4
+[Thread 3] Value: 1 / 0x1
+[Thread 18] Value: 16 / 0x10
+[Thread 20] Value: 18 / 0x12
+[Thread 8] Value: 6 / 0x6
+[Thread 15] Value: 13 / 0xd
+[Thread 12] Value: 10 / 0xa
+[Thread 5] Value: 3 / 0x3
+[Thread 2] Value: 0 / 0x0
+[Thread 17] Value: 15 / 0xf
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 7] Value: 5[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 8] Unlocking object 7
+[Thread 8] Locking object 6
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 15] Locking object 13
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 14] Locked object 13
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 17] Unlocking object 15
+[Thread 17] Unlocking object 16
+[Thread 16] Locked object 15
+[Thread 17] Locking object 15
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 6] Locked object 5
+[Thread 7] Locking object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 13] Locked object 12
+[Thread 14] Locking object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 3] Locked object 2
+[Thread 4] Locking object 2
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 16] Unlocking object 14
+[Thread 16] Unlocking object 15
+[Thread 15] Locked object 14
+[Thread 16] Locking object 14
+[Thread 17] Locked object 15
+[Thread 17] Locking object 16
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 18] Locking object 16
+[Thread 19] Locked object 17
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 19] Locking object 18
+[Thread 20] Locked object 19
+[Thread 18] Locked object 16
+[Thread 18] Locking object 17
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 10] Locking object 8
+[Thread 6] Unlocking object 4
+[Thread 6] Unlocking object 5
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 13] Locking object 11
+[Thread 5] Locked object 4
+[Thread 6] Locking object 4
+[Thread 7] Locked object 5
+[Thread 7] Locking object 6
+[Thread 12] Locked object 11
+[Thread 3] Unlocking object 1
+[Thread 3] Unlocking object 2
+[Thread 2] Locked object 1
+[Thread 3] Locking object 1
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 15] Unlocking object 13
+[Thread 15] Unlocking object 14
+[Thread 14] Locked object 13
+[Thread 21] Locked object 20
+[Thread 16] Locked object 14
+[Thread 16] Locking object 15
+[Thread 15] Locking object 13
+[Thread 5] Unlocking object 3
+[Thread 5] Unlocking object 4
+[Thread 4] Locked object 3
+[Thread 5] Locking object 3
+[Thread 6] Locked object 4
+[Thread 6] Locking object 5
+[Thread 9] Unlocking object 7
+[Thread 9] Unlocking object 8
+[Thread 8] Locked object 7
+[Thread 9] Locking object 7
+[Thread 10] Locked object 8
+[Thread 10] Locking object 9
+[Thread 12] Unlocking object 10
+[Thread 12] Unlocking object 11
+[Thread 11] Locked object 10
+[Thread 12] Locking object 10
+[Thread 13] Locked object 11
+[Thread 13] Locking object 12
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 2] Locked object 1
+[Thread 14] Unlocking object 12
+[Thread 14] Unlocking object 13
+[Thread 14] Locking object 12
+[Thread 13] Locked object 12
+[Thread 15] Locked object 13
+[Thread 15] Locking object 14
+[Thread 19] Unlocking object 17
+[Thread 19] Unlocking object 18
+[Thread 18] Locked object 17
+[Thread 19] Locking object 17
+[Thread 20] Locked object 18
+[Thread 20] Locking object 19
+[Thread 21] Unlocking object 19
+[Thread 21] Unlocking object 20
+[Thread 21] Locking object 19
+[Thread 20] Locked object 19
+[Thread 8] Unlocking object 6
+[Thread 8] Unlocking object 7
+[Thread 7] Locked object 6
+[Thread 9] Locked object 7
+[Thread 9] Locking object 8
+[Thread 8] Locking object 6
+[Thread 11] Unlocking object 9
+[Thread 11] Unlocking object 10
+[Thread 10] Locked object 9
+[Thread 11] Locking object 9
+[Thread 12] Locked object 10
+[Thread 12] Locking object 11
+[Thread 4] Unlocking object 2
+[Thread 4] Unlocking object 3
+[Thread 4] Locking object 2
+[Thread 4] Locked object 2
+[Thread 4] Locking object 3
+[Thread 5] Locked object 3
+[Thread 5] Locking object 4
+[Thread 2] Unlocking object 0
+[Thread 2] Unlocking object 1
+[Thread 2] Locking object 0
+[Thread 2] Locked object 0
+[Thread 2] Locking object 1
+[Thread 3] Locked object 1
+[Thread 3] Locking object 2
+[Thread 13] Unlocking object 11
+[Thread 13] Unlocking object 12
+[Thread 12] Locked object 11
+[Thread 13] Locking object 11
+[Thread 14] Locked object 12
+[Thread 14] Locking object 13
+[Thread 18] Unlocking object 16
+[Thread 18] Unlocking object 17
+[Thread 17] Locked object 16
+[Thread 19] Locked object 17
+[Thread 19] Locking object 18
+[Thread 18] Locking object 16
+[Thread 20] Unlocking object 18
+[Thread 20] Unlocking object 19
+[Thread 19] Locked object 18
+[Thread 20] Locking object 18
+[Thread 21] Locked object 19
+[Thread 21] Locking object 20
+[Thread 21] Locked object 20
+[Thread 7] Unlocking object 5
+[Thread 7] Unlocking object 6
+[Thread 7] Locking object 5
+[Thread 6] Locked object 5
+[Thread 8] Locked object 6
+[Thread 8] Locking object 7
+[Thread 10] Unlocking object 8
+[Thread 10] Unlocking object 9
+[Thread 9] Locked object 8
+[Thread 10] Locking object 8
+[Thread 11] Locked object 9
+[Thread 11] Locking object 10
+[Thread 16] Execution timeout
+[Thread 5] Execution timeout
+[Thread 10] Execution timeout
+[Thread 6] Execution timeout
+[Thread 2] Execution timeout
+[Thread 9] Execution timeout
+[Thread 11] Execution timeout
+[Thread 14] Execution timeout
+[Thread 17] Execution timeout
+[Thread 19] Execution timeout
+[Thread 3] Execution timeout
+[Thread 4] Execution timeout
+[Thread 20] Execution timeout
+[Thread 1] Execution timeout
+[Thread 12] Execution timeout
+[Thread 7] Execution timeout
+[Thread 15] Execution timeout
+[Thread 13] Execution timeout
+[Thread 18] Execution timeout
+[Thread 21] Execution timeout
+[Thread 8] Execution timeout
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+ / 0x5
+[Thread 11] Value: 9 / 0x9
+[Thread 4] Value: 2 / 0x2
+[Thread 14] Value: 12 / 0xc
+[Thread 16] Value: 14 / 0xe
+[Thread 21] Value: 19 / 0x13
+[Thread 18] Value: 16 / 0x10
+[Thread 10] Value: 8 / 0x8
+[Thread 6] Value: 4 / 0x4
+[Thread 13] Value: 11 / 0xb
+[Thread 3] Value: 1 / 0x1
+[Thread 15] Value: 13 / 0xd
+[Thread 20] Value: 18 / 0x12
+[Thread 9] Value: 7 / 0x7
+[Thread 5] Value: 3 / 0x3
+[Thread 12] Value: 10 / 0xa
+[Thread 2] Value: 0 / 0x0
+[Thread 19] Value: 17 / 0x11
+[Thread 14] Value: 12 / 0xc
+[Thread 21] Value: 19 / 0x13
+[Thread 4] Value: 2 / 0x2
+[Thread 8] Value: 6 / 0x6
+[Thread 11] Value: 9 / 0x9
+[Thread 2] Value: 0 / 0x0
+[Thread 13] Value: 11 / 0xb
+[Thread 18] Value: 16 / 0x10
+[Thread 20] Value: 18 / 0x12
+[Thread 7] Value: 5 / 0x5
+[Thread 10] Value: 8 / 0x8
+[Thread 12] Value: 10 / 0xa
+[Thread 17] Value: 15 / 0xf
+[Thread 19] Value: 17 / 0x11
+[Thread 21] Value: 19 / 0x13
+[Thread 6] Value: 4 / 0x4
+[Thread 9] Value: 7 / 0x7
+JIT exited normally.

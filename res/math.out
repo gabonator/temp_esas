@@ -1,0 +1,14 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Terminate] Called from thread 1
+[Thread 1] Halted via terminate
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+[Thread 1] Value: 280 / 0x118
+[Thread 1] Value: 232 / 0xe8
+[Thread 1] Value: 10 / 0xa
+[Thread 1] Value: 16 / 0x10
+[Thread 1] Value: 6144 / 0x1800
+[Thread 1] Value: 1 / 0x1
+JIT exited normally.

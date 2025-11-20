@@ -1,0 +1,18 @@
+.dataSize 0
+.code
+
+# should be terminated because of stack exhaustion, no tail optimization
+loadConst 0, r0
+loadConst 1, r1
+
+call stack_overflow
+
+hlt
+
+stack_overflow:
+	consoleWrite r0
+	add r0, r1, r0
+	consoleWrite r0
+	call stack_overflow
+	ret	
+

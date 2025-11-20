@@ -1,0 +1,20 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Terminate] Called from thread 1
+[Thread 1] Halted via terminate
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+[Thread 1] Value: 81985529216486895 / 0x123456789abcdef
+[Thread 1] Value: 2309737967 / 0x89abcdef
+[Thread 1] Value: 52719 / 0xcdef
+[Thread 1] Value: 239 / 0xef
+[Thread 1] Value: 19088743 / 0x1234567
+[Thread 1] Value: 19088743 / 0x1234567
+[Thread 1] Value: 17767 / 0x4567
+[Thread 1] Value: 103 / 0x67
+[Thread 1] Value: 0 / 0x0
+[Thread 1] Value: 0 / 0x0
+[Thread 1] Value: 0 / 0x0
+[Thread 1] Value: 0 / 0x0
+JIT exited normally.

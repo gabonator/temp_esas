@@ -1,0 +1,144 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Thread 2] Start...
+[GLOBAL] register threadId 2
+[Thread 3] Start...
+[GLOBAL] register threadId 3
+[Thread 4] Start...
+[GLOBAL] register threadId 4
+[Thread 5] Start...
+[GLOBAL] register threadId 5
+[Thread 6] Start...
+[GLOBAL] register threadId 6
+[Thread 7] Start...
+[GLOBAL] register threadId 7
+[Terminate] Called from thread 2
+[Thread 8] Start...
+[GLOBAL] register threadId 8
+[Thread 2] Halted via terminate
+[GLOBAL] unregister threadId 2
+[Terminate] Called from thread 3
+[Terminate] Called from thread 4
+[Thread 3] Halted via terminate
+[Terminate] Called from thread 6
+[Terminate] Called from thread 8
+[Thread 4] Halted via terminate
+[Thread 9] Start...
+[Terminate] Called from thread 5
+[GLOBAL] unregister threadId 3
+[Thread 6] Halted via terminate
+[GLOBAL] unregister threadId 6
+[GLOBAL] unregister threadId 4
+[Thread 8] Halted via terminate
+[GLOBAL] unregister threadId 8
+[Terminate] Called from thread 7
+[GLOBAL] register threadId 9
+[Thread 5] Halted via terminate
+[GLOBAL] unregister threadId 5
+...
+[Thread 983] Start...
+[GLOBAL] register threadId 983
+[Thread 984] Start...
+[GLOBAL] register threadId 984
+[Terminate] Called from thread 982
+[Thread 982] Halted via terminate
+[GLOBAL] unregister threadId 982
+[Thread 985] Start...
+[GLOBAL] register threadId 985
+[Terminate] Called from thread 983
+[Thread 983] Halted via terminate
+[GLOBAL] unregister threadId 983
+[Terminate] Called from thread 984
+[Thread 986] Start...
+[GLOBAL] register threadId 986
+[Thread 984] Halted via terminate
+[GLOBAL] unregister threadId 984
+[Thread 987] Start...
+[GLOBAL] register threadId 987
+[Terminate] Called from thread 985
+[Thread 985] Halted via terminate
+[GLOBAL] unregister threadId 985
+[Thread 988] Start...
+[GLOBAL] register threadId 988
+[Terminate] Called from thread 986
+[Thread 989] Start...
+[GLOBAL] register threadId 989
+[Terminate] Called from thread 987
+[Thread 986] Halted via terminate
+[GLOBAL] unregister threadId 986
+[Thread 990] Start...
+[GLOBAL] register threadId 990
+[Terminate] Called from thread 988
+[Thread 987] Halted via terminate
+[GLOBAL] unregister threadId 987
+[Thread 988] Halted via terminate
+[GLOBAL] unregister threadId 988
+[Terminate] Called from thread 989
+[Thread 989] Halted via terminate
+[GLOBAL] unregister threadId 989
+[Thread 991] Start...
+[GLOBAL] register threadId 991
+[Terminate] Called from thread 990
+[Thread 990] Halted via terminate
+[GLOBAL] unregister threadId 990
+[Thread 992] Start...
+[GLOBAL] register threadId 992
+[Thread 993] Start...
+[GLOBAL] register threadId 993
+[Terminate] Called from thread 991
+[Thread 991] Halted via terminate
+[GLOBAL] unregister threadId 991
+[Thread 994] Start...
+[GLOBAL] register threadId 994
+[Terminate] Called from thread 992
+[Thread 992] Halted via terminate
+[GLOBAL] unregister threadId 992
+[Thread 995] Start...
+[GLOBAL] register threadId 995
+[Terminate] Called from thread 993
+[Thread 993] Halted via terminate
+[GLOBAL] unregister threadId 993
+[Terminate] Called from thread 994
+[Thread 996] Start...
+[GLOBAL] register threadId 996
+[Thread 994] Halted via terminate
+[GLOBAL] unregister threadId 994
+[Thread 997] Start...
+[GLOBAL] register threadId 997
+[Terminate] Called from thread 995
+[Thread 998] Start...
+[GLOBAL] register threadId 998
+[Thread 995] Halted via terminate
+[GLOBAL] unregister threadId 995
+[Terminate] Called from thread 996
+[Thread 996] Halted via terminate
+[GLOBAL] unregister threadId 996
+[Terminate] Called from thread 997
+[Thread 999] Start...
+[GLOBAL] register threadId 999
+[Thread 997] Halted via terminate
+[GLOBAL] unregister threadId 997
+[Thread 1000] Start...
+[GLOBAL] register threadId 1000
+[Terminate] Called from thread 999
+[Thread 999] Halted via terminate
+[GLOBAL] unregister threadId 999
+[Thread 1001] Start...
+[GLOBAL] register threadId 1001
+[Terminate] Called from thread 998
+[Thread 998] Halted via terminate
+[GLOBAL] unregister threadId 998
+[Terminate] Called from thread 1000
+[Thread 1000] Halted via terminate
+[GLOBAL] unregister threadId 1000
+[Terminate] Called from thread 1001
+[Thread 1001] Joining...
+[Thread 1001] Halted via terminate
+[GLOBAL] unregister threadId 1001
+[Thread 1001] Join done...
+[Terminate] Called from thread 1
+[Thread 1] Halted via terminate
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+JIT exited normally.

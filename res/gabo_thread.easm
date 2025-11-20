@@ -1,0 +1,15 @@
+.dataSize 0
+.code
+
+# child thread should operate on custom register set copied from parent
+loadConst 1, r0
+createThread threadProc, r5
+joinThread r5
+consoleWrite r0
+
+hlt
+
+threadProc:
+	consoleWrite r0
+	loadConst 2, r0
+	hlt

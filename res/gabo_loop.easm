@@ -1,0 +1,7 @@
+.dataSize 0
+.code
+
+# should be terminated by timeout
+
+loop:
+	jump loop

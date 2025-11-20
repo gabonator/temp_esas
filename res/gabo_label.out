@@ -1,0 +1,2 @@
+Assertion failed: (labels[i.args[0].addr] != 'C'), function Compile, file compile.h, line 34.
+Assertion failed: (WIFEXITED(status)), function RunGuard, file main.cpp, line 197.

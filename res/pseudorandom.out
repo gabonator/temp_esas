@@ -1,0 +1,22 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Thread 2] Start...
+[GLOBAL] register threadId 2
+[Thread 1] Locking object 100
+[Thread 1] Locked object 100
+[Thread 1] Unlocking object 100
+[Thread 2] Joining...
+[Thread 2] Locking object 100
+[Thread 2] Locked object 100
+[Thread 2] Unlocking object 100
+[Terminate] Called from thread 2
+[Thread 2] Halted via terminate
+[GLOBAL] unregister threadId 2
+[Thread 2] Join done...
+[Terminate] Called from thread 1
+[Thread 1] Halted via terminate
+[GLOBAL] unregister threadId 1
+[Thread 1] Join done...
+[Thread 1] Value: 3537 / 0xdd1
+JIT exited normally.

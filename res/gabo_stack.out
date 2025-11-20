@@ -1,0 +1,18 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Thread 1] Value: 0 / 0x0
+[Thread 1] Value: 1 / 0x1
+[Thread 1] Value: 1 / 0x1
+[Thread 1] Value: 2 / 0x2
+[Thread 1] Value: 2 / 0x2
+[Thread 1] Value: 3 / 0x3
+...
+[Thread 1] Value: 33358 / 0x824e
+[Thread 1] Value: 33358 / 0x824e
+[Thread 1] Value: 33359 / 0x824f
+[Thread 1] Value: 33359 / 0x824f
+[Thread 1] Value: 33360 / 0x8250
+[Thread 1] Value: 33360 / 0x8250
+[Thread 1] Value: 33361 / 0x8251
+[ThAssertion failed: (WIFEXITED(status)), function RunGuard, file main.cpp, line 197.

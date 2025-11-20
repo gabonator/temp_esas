@@ -1,0 +1,6 @@
+[Thread 1] Start...
+[GLOBAL] register threadId 1
+[Thread 1] Joining...
+[Thread 1] Execution timeout
+[Thread 1] Not responding, terminating
+JIT was terminated with hard timeout.

@@ -58,7 +58,7 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
         {
             case EVM2::Op::LOADCONST:
                 assert(i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::CONST && i.args[1].kind == EVM2::Arg::Kind::REG);
-                jit.loadImmediate(i.args[1].reg, i.args[0].constValue);
+                jit.loadImmediate(i.args[1], i.args[0].constValue);
                 break;
             case EVM2::Op::CONSOLEREAD:
                 assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::REG);
@@ -71,7 +71,28 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
                 break;
             case EVM2::Op::ADD:
                 assert(i.args.size() == 3);
-                jit.add(i.args[2], i.args[0], i.args[1]);
+                jit.alu(ARM64JITFrontend::AluOp::ADD, i.args[2], i.args[0], i.args[1]);
+                break;
+            case EVM2::Op::SUB:
+                assert(i.args.size() == 3);
+                jit.alu(ARM64JITFrontend::AluOp::SUB, i.args[2], i.args[0], i.args[1]);
+                break;
+            case EVM2::Op::MUL:
+                assert(i.args.size() == 3);
+                jit.alu(ARM64JITFrontend::AluOp::MUL, i.args[2], i.args[0], i.args[1]);
+                break;
+            case EVM2::Op::DIV:
+                assert(i.args.size() == 3);
+                jit.alu(ARM64JITFrontend::AluOp::DIV, i.args[2], i.args[0], i.args[1]);
+                break;
+            case EVM2::Op::MOD:
+                assert(i.args.size() == 3);
+                jit.alu(ARM64JITFrontend::AluOp::MOD, i.args[2], i.args[0], i.args[1]);
+                break;
+            case EVM2::Op::COMPARE:
+                assert(i.args.size() == 3);
+                jit.alu(ARM64JITFrontend::AluOp::SUB, i.args[2], i.args[0], i.args[1]);
+                jit.alu(ARM64JITFrontend::AluOp::SIGNUM, i.args[2], i.args[2]);
                 break;
             case EVM2::Op::MOV:
                 assert(i.args.size() == 2);
@@ -80,27 +101,6 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
             case EVM2::Op::CONSOLEWRITE:
                 assert(i.args.size() == 1);
                 jit.hostCallWithOps((uintptr_t)iface.print_value, {}, i.args[0]);
-                break;
-            case EVM2::Op::SUB:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
-                jit.sub(i.args[2].reg, i.args[0].reg, i.args[1].reg);
-                break;
-            case EVM2::Op::DIV:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
-                jit.div(i.args[2].reg, i.args[0].reg, i.args[1].reg);
-                break;
-            case EVM2::Op::MOD:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
-                jit.mod(i.args[2].reg, i.args[0].reg, i.args[1].reg);
-                break;
-            case EVM2::Op::MUL:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
-                jit.mul(i.args[2].reg, i.args[0].reg, i.args[1].reg);
-                break;
-            case EVM2::Op::COMPARE:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG && i.args[2].kind == EVM2::Arg::Kind::REG);
-                jit.sub(i.args[2].reg, i.args[0].reg, i.args[1].reg);
-                jit.signum(i.args[2].reg, i.args[2].reg);
                 break;
             case EVM2::Op::JUMP:
                 assert(i.args.size() == 1 && i.args[0].kind == EVM2::Arg::Kind::ADDR);

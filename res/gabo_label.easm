@@ -1,0 +1,10 @@
+.dataSize 0
+.code
+
+# current implementation doesn't allow the label to be used for jump and call
+# at the same time
+
+call loop
+
+loop:
+	jump loop

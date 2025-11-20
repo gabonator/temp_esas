@@ -74,19 +74,6 @@ private:
         }
     }
     
-    /**
-     * Load a 32-bit immediate value into a register (W register)
-     */
-    void emit_load_imm32(int reg, uint32_t value) {
-        uint16_t low = value & 0xFFFF;
-        uint16_t high = (value >> 16) & 0xFFFF;
-        
-        emit(ARM64Backend::gen_movz_w(reg, low, 0));
-        if (high != 0) {
-            emit(ARM64Backend::gen_movk_w(reg, high, 16));
-        }
-    }
-    
 public:
     ARM64JITFrontend() : executable_memory(nullptr), executable_size(0) {}
     
@@ -162,18 +149,7 @@ public:
     
     
     // ===== Register Operations =====
-    
-    /**
-     * Load a register value into a temporary register
-     * Returns: x2 = registers[reg_index] (full 64-bit)
-     */
-    void loadRegister(int reg_index, int temp_reg = 2) {
-        // Load from registers array: ldr xt, [x20, #(reg_index * 8)]
-        emit(ARM64Backend::gen_ldr_x_imm(temp_reg, 20, reg_index));
-    }
-
     void loadOperand(const Operand& op, int temp_reg = 2) {
-        // Load from registers array: ldr xt, [x20, #(reg_index * 8)]
         switch (op.kind)
         {
             case Operand::Kind::NONE:
@@ -182,7 +158,7 @@ public:
                 emit(ARM64Backend::gen_ldr_x_imm(temp_reg, 20, op.reg));
                 break;
             case Operand::Kind::MEM:
-                loadRegister(op.reg, temp_reg);
+                emit(ARM64Backend::gen_ldr_x_imm(temp_reg, 20, op.reg));
                 emit(ARM64Backend::gen_reg_mem(temp_reg, 19, temp_reg, true, op.sizeBytes*8));
                 break;
             case EVM2::Arg::Kind::ADDR:
@@ -200,156 +176,97 @@ public:
             case Operand::Kind::NONE:
                 break;
             case Operand::Kind::REG:
-                storeRegister(op.reg, reg);
+                emit(ARM64Backend::gen_str_x_imm(reg, 20, op.reg));
                 break;
             case Operand::Kind::MEM:
                 assert(reg != 3);
-                loadRegister(op.reg, 3);
+                emit(ARM64Backend::gen_ldr_x_imm(3, 20, op.reg));
                 emit(ARM64Backend::gen_reg_mem(reg, 19, 3, false, op.sizeBytes*8));
                 break;
             default:
                 assert(0);
         }
-
-    }
-    /**
-     * Store a temporary register into a register slot
-     * Stores: registers[reg_index] = xt (full 64-bit)
-     */
-    void storeRegister(int reg_index, int temp_reg = 2) {
-        emit(ARM64Backend::gen_str_x_imm(temp_reg, 20, reg_index));
     }
     
     /**
-     * Move register value
-     * registers[dest] = registers[src]
+     * Move operands (used by MOV instruction)
      */
-    void mov(int dest, int src) {
-        loadRegister(src, 2);
-        storeRegister(dest, 2);
-    }
-    
-    void mov(Operand op1, Operand op2)
-    {
+    void mov(Operand op1, Operand op2) {
         loadOperand(op2);
         storeOperand(op1);
     }
     
     /**
-     * Load immediate value into a register
-     * registers[reg_index] = value (full 64-bit)
+     * Load immediate value into an operand
+     * dest = value (full 64-bit)
      */
-    size_t loadImmediate(int reg_index, uint64_t value) {
+    size_t loadImmediate(Operand dest, uint64_t value) {
         size_t pos = getCurrentIndex();
         emit_load_imm64(2, value);
-        storeRegister(reg_index, 2);
+        storeOperand(dest, 2);
         return pos;
     }
     
     /**
-     * Add two registers
-     * registers[dest] = registers[src1] + registers[src2]
+     * ALU operation type
      */
-    void add(Operand dest, Operand src1, Operand src2) {
+    enum class AluOp {
+        ADD,      // dest = src1 + src2
+        SUB,      // dest = src1 - src2
+        MUL,      // dest = src1 * src2
+        DIV,      // dest = src1 / src2 (signed)
+        MOD,      // dest = src1 % src2 (unsigned)
+        SIGNUM    // dest = signum(src1), src2 ignored
+    };
+    
+    /**
+     * Unified ALU operation
+     * Performs arithmetic operation: dest = src1 OP src2
+     */
+    void alu(AluOp op, Operand dest, Operand src1, Operand src2 = {}) {
         loadOperand(src1, 2);
         loadOperand(src2, 3);
-        emit(ARM64Backend::gen_add_x_reg(2, 2, 3));
+
+        switch (op) {
+            case AluOp::ADD:
+                emit(ARM64Backend::gen_add_x_reg(2, 2, 3));
+                break;
+                
+            case AluOp::SUB:
+                emit(ARM64Backend::gen_sub_x_reg(2, 2, 3));
+                break;
+                
+            case AluOp::MUL:
+                emit(ARM64Backend::gen_mul_x(2, 2, 3));
+                break;
+                
+            case AluOp::DIV:
+                emit(ARM64Backend::gen_sdiv_x(2, 2, 3));
+                break;
+                
+            case AluOp::MOD:
+                // dest = src1 - (src1 / src2) * src2
+                emit(ARM64Backend::gen_udiv_x(4, 2, 3));
+                emit(ARM64Backend::gen_msub_x(2, 4, 3, 2));
+                break;
+                
+            case AluOp::SIGNUM:
+                // Returns: -1 if src1 < 0, 0 if src1 == 0, 1 if src1 > 0
+                emit(ARM64Backend::gen_cmp_x(2, 31));
+                emit(ARM64Backend::gen_cset_x(3, ARM64Backend::ConditionCode::COND_GT));
+                emit(ARM64Backend::gen_cmp_x(2, 31));
+                emit(ARM64Backend::gen_cset_x(4, ARM64Backend::ConditionCode::COND_LT));
+                emit(ARM64Backend::gen_sub_x_reg(2, 3, 4));
+                break;
+        }
+        
         storeOperand(dest, 2);
     }
     
     /**
-     * Subtract two registers
-     * registers[dest] = registers[src1] - registers[src2]
+     * Compare two operands and set condition flags
      */
-    void sub(int dest, int src1, int src2) {
-        loadRegister(src1, 2);
-        loadRegister(src2, 3);
-        emit(ARM64Backend::gen_sub_x_reg(2, 2, 3));
-        storeRegister(dest, 2);
-    }
-    
-    /**
-     * Multiply two registers
-     * registers[dest] = registers[src1] * registers[src2]
-     */
-    void mul(int dest, int src1, int src2) {
-        loadRegister(src1, 2);
-        loadRegister(src2, 3);
-        emit(ARM64Backend::gen_mul_x(2, 2, 3));
-        storeRegister(dest, 2);
-    }
-    
-    /**
-     * Signed divide two registers
-     * registers[dest] = registers[src1] / registers[src2] (signed)
-     */
-    void div(int dest, int src1, int src2) {
-        loadRegister(src1, 2);
-        loadRegister(src2, 3);
-        emit(ARM64Backend::gen_sdiv_x(2, 2, 3));
-        storeRegister(dest, 2);
-    }
-    
-    /**
-     * Signed modulo (remainder)
-     * registers[dest] = registers[src1] % registers[src2] (unsigned)
-     * Implemented as: dest = src1 - (src1 / src2) * src2
-     */
-    void mod(int dest, int src1, int src2) {
-        loadRegister(src1, 2);   // x2 = dividend
-        loadRegister(src2, 3);   // x3 = divisor
-        
-        // x4 = x2 / x3 (quotient, unsigned)
-        // x2 = x2 - (x4 * x3)  using MSUB: x2 = x2 - (x4 * x3)
-        emit(ARM64Backend::gen_udiv_x(4, 2, 3));
-        emit(ARM64Backend::gen_msub_x(2, 4, 3, 2));
-        
-        storeRegister(dest, 2);
-    }
-    
-    /**
-     * Add immediate to register
-     * registers[dest] = registers[src] + imm
-     */
-    void addImmediate(int dest, int src, uint64_t imm) {
-        loadRegister(src, 2);
-        if (imm <= 0xFFF) {
-            emit(ARM64Backend::gen_add_x_imm(2, 2, (uint16_t)imm));
-        } else {
-            emit_load_imm64(3, imm);
-            emit(ARM64Backend::gen_add_x_reg(2, 2, 3));
-        }
-        storeRegister(dest, 2);
-    }
-    
-    /**
-     * Signum function
-     * registers[dest] = signum(registers[src])
-     * Returns: -1 if src < 0, 0 if src == 0, 1 if src > 0
-     * 
-     * Algorithm:
-     *   result = (src > 0) - (src < 0)
-     * This is implemented as:
-     *   cmp src, #0
-     *   cset x2, gt      // x2 = 1 if src > 0, else 0
-     *   cmp src, #0
-     *   csinc x3, xzr, xzr, ge  // x3 = 0 if src >= 0, else 1
-     *   sub x2, x2, x3   // result = (src > 0) - (src < 0)
-     */
-    void signum(int dest, int src) {
-        loadRegister(src, 2);  // x2 = src value
-        emit(ARM64Backend::gen_cmp_x(2, 31));  // cmp x2, xzr
-        emit(ARM64Backend::gen_cset_x(3, ARM64Backend::ConditionCode::COND_GT));
-        emit(ARM64Backend::gen_cmp_x(2, 31));  // cmp x2, xzr
-        emit(ARM64Backend::gen_cset_x(4, ARM64Backend::ConditionCode::COND_LT));
-        emit(ARM64Backend::gen_sub_x_reg(2, 3, 4));
-        storeRegister(dest, 2);
-    }
-    
-    // ===== Comparison and Branches =====
-        
-    size_t compare(const Operand& op1, const Operand& op2)
-    {
+    size_t compare(const Operand& op1, const Operand& op2) {
         size_t pos = getCurrentIndex();
         loadOperand(op1, 2);
         loadOperand(op2, 3);
@@ -359,35 +276,10 @@ public:
 
     /**
      * Branch if equal
-     * Branches to target if last comparison was equal
      */
     size_t branchIfEqual(size_t target_index = 0) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
         return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_EQ, offset));
-    }
-    
-    /**
-     * Branch if not equal
-     */
-    size_t branchIfNotEqual(size_t target_index) {
-        int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_NE, offset));
-    }
-    
-    /**
-     * Branch if less than (signed)
-     */
-    size_t branchIfLessThan(size_t target_index) {
-        int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_LT, offset));
-    }
-    
-    /**
-     * Branch if greater than (signed)
-     */
-    size_t branchIfGreaterThan(size_t target_index) {
-        int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_GT, offset));
     }
     
     /**
@@ -413,30 +305,37 @@ public:
         emit(ARM64Backend::gen_ret());
     }
 
+    /**
+     * No operation
+     */
     void nop() {
         emit(ARM64Backend::gen_nop());
     }
     
-    void funcPrologue()
-    {
+    /**
+     * Function prologue for CALL targets
+     */
+    void funcPrologue() {
         emit(ARM64Backend::gen_prologue1());
         emit(ARM64Backend::gen_prologue2());
     }
 
-    void funcEpilogue()
-    {
+    /**
+     * Function epilogue for RET instruction
+     */
+    void funcEpilogue() {
         emit(ARM64Backend::gen_epilogue());
     }
 
     /**
-     * Patch a branch instruction at branch_index to target target_index
+     * Patch a branch instruction or immediate value
      */
     void patchBranchOrImm(size_t branch_index, size_t target_index) {
         if (branch_index >= code.size()) return;
         
         uint32_t inst = code[branch_index];
 
-        // Not a real branch, just 16 bit immediate
+        // MOVZ immediate (used for thread entry points)
         if ((inst & 0xFF000000) == 0xD2000000) {
             int32_t imm16 = target_index & 0xffff;
             assert(imm16 == target_index);
@@ -463,28 +362,20 @@ public:
         }
     }
     
-    // ===== Host Function Calls =====
-    
     /**
-     * Call a host function with register arguments
-     * All 16 registers are passed as uint64_t values
-     * 
-     * void (*func)(uint64_t regs[16])
+     * Call a host function with operand arguments
+     * Loads operands into x0-x3 and stores result from x0
      */
-
-    size_t hostCallWithOps(uint64_t func_ptr, const Operand& ret, const Operand& op1, const Operand& op2 = {}, const Operand& op3 = {}, const Operand& op4 = {})
-    {
+    size_t hostCallWithOps(uint64_t func_ptr, const Operand& ret, const Operand& op1, 
+                           const Operand& op2 = {}, const Operand& op3 = {}, const Operand& op4 = {}) {
         size_t pos = getCurrentIndex();
-        // must be at first place - we will be patching address for start thread
         loadOperand(op1, 0);
         loadOperand(op2, 1);
         loadOperand(op3, 2);
         loadOperand(op4, 3);
-
         emit_load_imm64(9, func_ptr);
         emit(ARM64Backend::gen_blr(9));
         storeOperand(ret, 0);
-
         return pos;
     }
 
