@@ -56,11 +56,17 @@ int main()
 //    EVM2::Disassembler disasm("pseudorandom.evm");
 //    EVM2::Disassembler disasm("philosophers.evm"); // bad
 //    EVM2::Disassembler disasm("crc.evm");
-    EVM2::Disassembler disasm("multithreaded_file_write.evm");
+//    EVM2::Disassembler disasm("multithreaded_file_write.evm");
+    
+//    EVM2::Disassembler disasm("gabo_boundary.evm"); // bad
+//    EVM2::Disassembler disasm("gabo_label.evm");
+//    EVM2::Disassembler disasm("gabo_loop.evm");
+//    EVM2::Disassembler disasm("gabo_stack.evm"); // catch EXC_BAD_ACCESS
+    EVM2::Disassembler disasm("gabo_thread.evm");
     disasm.print();
     memset(memory, 0, disasm.getHeader().dataSize);
-    memcpy(memory, &disasm.getData()[0], disasm.getData().size());
-
+    if (auto data = disasm.getData(); !data.empty())
+        memcpy(memory, &data[0], data.size());
     
     static std::mutex mutexIo;
     // Compile the JIT code
@@ -140,7 +146,11 @@ int main()
     func = Compile(disasm, jit, iface);
     
     // Create and configure the main thread
-    auto mainThreadConfig = std::make_shared<JitThread>(memory, func, jit.entry());
+    //auto mainThreadConfig = std::make_shared<JitThread>(memory, []func, jit.entry());
+    auto mainThreadConfig = std::make_shared<JitThread>(memory, [](void* memory, uint64_t* registers, size_t entry_point){
+        func(memory,registers,entry_point);
+    }, jit.entry());
+    
     
     auto mainThread = std::make_shared<CThread>(mainThreadConfig);
     mainThread->run();

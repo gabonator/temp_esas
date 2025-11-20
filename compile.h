@@ -28,8 +28,9 @@ JITFunction Compile(const EVM2::Disassembler& disasm, ARM64JITFrontend& jit, JIT
     {
         switch (i.opcode)
         {
+            case EVM2::Op::JUMP:
             case EVM2::Op::JUMPEQ:
-                assert(i.args.size() == 3 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
+                assert(i.args.size() >= 1 && i.args[0].kind == EVM2::Arg::Kind::ADDR);
                 assert(labels[i.args[0].addr] != 'C');
                 labels[i.args[0].addr] = 'G';
                 break;

@@ -1,6 +1,3 @@
-#ifndef JIT_ARM64_FE_H
-#define JIT_ARM64_FE_H
-
 #include "jit_arm64_be.h"
 #include <cstdint>
 #include <cstring>
@@ -136,14 +133,13 @@ public:
         // 
         // Layout:
         //   [N+0] lsl x9, x2, #2     - Multiply skip count by 4
-        //   [N+1] adr x10, #12       - Get PC + 12 (points to first instruction after BR)
+        //   [N+1] adr x10, #12-entry()*4 (base address)
         //   [N+2] add x9, x10, x9    - Compute target = base + (skip * 4)
         //   [N+3] br x9              - Jump to computed address
         //   [N+4] <-- Target when x2=0 (first generated instruction)
         
         emit(ARM64Backend::gen_lsl_x_imm(9, 2, 2));        // lsl x9, x2, #2  (x9 = x2 * 4)
-        //emit(ARM64Backend::gen_adr(10, 12));               // adr x10, #12 (get PC + 12, points to after BR)
-        emit(ARM64Backend::gen_adr(10, 12-entry()*4)); // 11 instructions of program prologue
+        emit(ARM64Backend::gen_adr(10, 12-(int)entry()*4));     // adr x10, #12-entry()*4 (get PC + base offset)
         emit(ARM64Backend::gen_add_x_reg(9, 10, 9));       // add x9, x10, x9 (x9 = PC + offset)
         emit(ARM64Backend::gen_br(9));                     // br x9 (jump to computed address)
     }
@@ -225,14 +221,6 @@ public:
      */
     void storeRegister(int reg_index, int temp_reg = 2) {
         emit(ARM64Backend::gen_str_x_imm(temp_reg, 20, reg_index));
-        // Store to registers array: str xt, [x20, #(reg_index * 8)]
-//        if (reg_index < 4096) {
-//            emit(ARM64Backend::gen_str_x_imm(temp_reg, 20, reg_index));
-//        } else {
-//            emit_load_imm64(3, reg_index * 8);
-//            emit(ARM64Backend::gen_add_x_reg(3, 20, 3));
-//            emit(ARM64Backend::gen_str_x_imm(temp_reg, 3, 0));
-//        }
     }
     
     /**
@@ -248,30 +236,6 @@ public:
     {
         loadOperand(op2);
         storeOperand(op1);
-//        switch (op2.kind)
-//        {
-//            case Operand::Kind::REG:
-//                storeRegister(op1.reg, 2);
-//                break;
-//            case Operand::Kind::MEM:
-//                loadRegister(op2.reg, 2);
-//                emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, op2.sizeBytes*8));
-//                break;
-//            default:
-//                assert(0);
-//        }
-        /*
-         //
-         //                if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::REG)
-         //                    jit.mov(i.args[1].reg, i.args[0].reg);
-         //                else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::REG && i.args[1].kind == EVM2::Arg::Kind::MEM)
-         //                    jit.storeMemoryReg(i.args[0].reg, i.args[1].reg, i.args[1].sizeBytes*8);
-         //                else if (i.args.size() == 2 && i.args[0].kind == EVM2::Arg::Kind::MEM && i.args[1].kind == EVM2::Arg::Kind::REG)
-         //                    jit.loadMemoryReg(i.args[1].reg, i.args[0].reg, i.args[0].sizeBytes*8);
-         //                else
-         //                    assert(0);
-
-         */
     }
     
     /**
@@ -284,52 +248,6 @@ public:
         storeRegister(reg_index, 2);
         return pos;
     }
-    // TODO: add comment
-    void storeMemoryReg(int src_reg, uint64_t address_reg, int size) {
-        loadRegister(src_reg, 2);
-        loadRegister(address_reg, 3);
-//        emit_load_imm64(3, address);
-        emit(ARM64Backend::gen_reg_mem(2, 19, 3, false, size));
-    }
-    
-    /**
-     * Load from memory using register as address
-     * registers[dest_reg] = *(uint64_t*)(memory + registers[addr_reg])
-     */
-    void loadMemoryReg(int dest_reg, int addr_reg, int size) {
-        loadRegister(addr_reg, 2);
-        emit(ARM64Backend::gen_reg_mem(2, 19, 2, true, size));
-        storeRegister(dest_reg, 2);
-    }
-    
-    /**
-     * Load 32-bit from memory using register as address
-     */
-//    void loadMemoryReg32(int dest_reg, int addr_reg) {
-//        loadRegister(addr_reg, 2);
-//        emit(ARM64Backend::gen_ldr_x_reg(2, 19, 2, 32));
-//        storeRegister(dest_reg, 2);
-//    }
-    
-    /**
-     * Store to memory using register as address
-     */
-//    void storeMemoryReg(int addr_reg, int src_reg, int size) {
-//        loadRegister(addr_reg, 2);
-//        loadRegister(src_reg, 3);
-//        emit(ARM64Backend::gen_str_x_reg(3, 19, 2, size));
-//    }
-    
-    /**
-     * Store 32-bit to memory using register as address
-     */
-//    void storeMemoryReg32(int addr_reg, int src_reg) {
-//        loadRegister(addr_reg, 2);
-//        loadRegister(src_reg, 3);
-//        emit(ARM64Backend::gen_str_w_reg(3, 19, 2));
-//    }
-    
-    // ===== Arithmetic Operations =====
     
     /**
      * Add two registers
@@ -385,9 +303,8 @@ public:
         loadRegister(src2, 3);   // x3 = divisor
         
         // x4 = x2 / x3 (quotient, unsigned)
-        emit(ARM64Backend::gen_udiv_x(4, 2, 3));
-        
         // x2 = x2 - (x4 * x3)  using MSUB: x2 = x2 - (x4 * x3)
+        emit(ARM64Backend::gen_udiv_x(4, 2, 3));
         emit(ARM64Backend::gen_msub_x(2, 4, 3, 2));
         
         storeRegister(dest, 2);
@@ -424,39 +341,16 @@ public:
      */
     void signum(int dest, int src) {
         loadRegister(src, 2);  // x2 = src value
-        
-        // Compare with 0
         emit(ARM64Backend::gen_cmp_x(2, 31));  // cmp x2, xzr
-        
-        // x3 = 1 if src > 0, else 0
-        emit(ARM64Backend::gen_cset_x(3, ARM64Backend::COND_GT));
-        
-        // Compare with 0 again
+        emit(ARM64Backend::gen_cset_x(3, ARM64Backend::ConditionCode::COND_GT));
         emit(ARM64Backend::gen_cmp_x(2, 31));  // cmp x2, xzr
-        
-        // x4 = 1 if src < 0, else 0
-        emit(ARM64Backend::gen_cset_x(4, ARM64Backend::COND_LT));
-        
-        // result = x3 - x4 = (src > 0) - (src < 0)
+        emit(ARM64Backend::gen_cset_x(4, ARM64Backend::ConditionCode::COND_LT));
         emit(ARM64Backend::gen_sub_x_reg(2, 3, 4));
-        
         storeRegister(dest, 2);
     }
     
     // ===== Comparison and Branches =====
-    
-    /**
-     * Compare two registers and set flags
-     * Compares registers[reg1] with registers[reg2]
-     */
-    size_t compare(int reg1, int reg2) {
-        size_t pos = getCurrentIndex();
-        loadRegister(reg1, 2);
-        loadRegister(reg2, 3);
-        emit(ARM64Backend::gen_cmp_x(2, 3));
-        return pos;
-    }
-    
+        
     size_t compare(const Operand& op1, const Operand& op2)
     {
         size_t pos = getCurrentIndex();
@@ -472,7 +366,7 @@ public:
      */
     size_t branchIfEqual(size_t target_index = 0) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::COND_EQ, offset));
+        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_EQ, offset));
     }
     
     /**
@@ -480,7 +374,7 @@ public:
      */
     size_t branchIfNotEqual(size_t target_index) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::COND_NE, offset));
+        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_NE, offset));
     }
     
     /**
@@ -488,7 +382,7 @@ public:
      */
     size_t branchIfLessThan(size_t target_index) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::COND_LT, offset));
+        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_LT, offset));
     }
     
     /**
@@ -496,7 +390,7 @@ public:
      */
     size_t branchIfGreaterThan(size_t target_index) {
         int32_t offset = (int32_t)target_index - (int32_t)code.size();
-        return emit(ARM64Backend::gen_bcond(ARM64Backend::COND_GT, offset));
+        return emit(ARM64Backend::gen_bcond(ARM64Backend::ConditionCode::COND_GT, offset));
     }
     
     /**
@@ -644,21 +538,8 @@ public:
         return executable_memory;
     }
     
-    /**
-     * Disassemble generated code (hex dump)
-     */
-    void disassemble() const {
-        printf("Generated code (%zu instructions, %zu bytes):\n",
-               code.size(), code.size() * 4);
-        for (size_t i = 0; i < code.size(); i++) {
-            printf("%04zx: %08x\n", i * 4, code[i]);
-        }
-    }
-    
     size_t entry()
     {
         return 11;
     }
 };
-
-#endif // JIT_ARM64_FE_H
