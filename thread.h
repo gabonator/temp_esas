@@ -23,7 +23,8 @@ public:
 
 class CThread : public std::enable_shared_from_this<CThread> {
     enum {
-        timeoutMs = 3000,
+        timeoutSoftMs = 3000,
+        timeoutHardMs = 5000,
         maxStack = 8*1024
     };
     
@@ -35,7 +36,6 @@ public:
 private:
     uint64_t threadId;
     std::thread nativeThread;
-    std::chrono::milliseconds timeout{timeoutMs}; // 10 second default timeout
     
     static std::atomic<uint64_t> threadCounter;
     static std::mutex gThreadRegistryMutex;
@@ -45,13 +45,13 @@ private:
 
     void registerThread() {
         std::lock_guard<std::mutex> lock(gThreadRegistryMutex);
-        printf("[GLOBAL] register threadId %lld\n", threadId);
+        fprintf(stderr, "[GLOBAL] register threadId %lld\n", threadId);
         gThreadRegistry[threadId] = shared_from_this();
     }
     
     void unregisterThread() {
         std::lock_guard<std::mutex> lock(gThreadRegistryMutex);
-        printf("[GLOBAL] unregister threadId %lld\n", threadId);
+        fprintf(stderr, "[GLOBAL] unregister threadId %lld\n", threadId);
         gThreadRegistry.erase(threadId);
     }
 
@@ -71,15 +71,15 @@ public:
     CThread& operator=(const CThread&) = delete;
         
     uint64_t run() {
-        printf("[Thread %lld] Start...\n", threadId);
+        fprintf(stderr, "[Thread %lld] Start...\n", threadId);
         assert(!nativeThread.joinable());
         
         pthread_attr_t attr;
         pthread_attr_init(&attr);
         pthread_attr_setstacksize(&attr, maxStack);
-        
+                
         registerThread();
-        nativeThread = std::thread([this]() {
+        nativeThread = std::thread([this, &promiseRet]() {
             currentThreadId = threadId;
             
             // Execute with timeout using async
@@ -90,21 +90,21 @@ public:
                 return config->run(threadId);
             });
             
-            auto status = future.wait_for(timeout);
+            auto status = future.wait_for(std::chrono::milliseconds {timeoutSoftMs});
             if (status == std::future_status::timeout) {
-                printf("[Thread %lld] Execution timeout\n", threadId);
+                fprintf(stderr, "[Thread %lld] Execution timeout\n", threadId);
                 shouldStop = true;
-                auto status = future.wait_for(timeout);
+                auto status = future.wait_for(std::chrono::milliseconds {timeoutHardMs - timeoutSoftMs});
                 if (status == std::future_status::timeout) {
-                    printf("[Thread %lld] Not responding, terminating\n", threadId);
+                    fprintf(stderr, "[Thread %lld] Not responding, terminating\n", threadId);
                     exit(1);
                 }
             } else {
                 int result = future.get();
                 if (result == 1) {
-                    printf("[Thread %lld] Halted via terminate\n", threadId);
+                    fprintf(stderr, "[Thread %lld] Halted via terminate\n", threadId);
                 } else if (result == 0) {
-                    printf("[Thread %lld] Completed normally\n", threadId);
+                    fprintf(stderr, "[Thread %lld] Completed normally\n", threadId);
                 }
             }
             
@@ -118,14 +118,17 @@ public:
     // Wait for thread to complete
     void join() {
         assert(nativeThread.joinable());
-        printf("[Thread %lld] Joining...\n", threadId);
+        fprintf(stderr, "[Thread %lld] Joining...\n", threadId);
         nativeThread.join();
-        printf("[Thread %lld] Join done...\n", threadId);
+        fprintf(stderr, "[Thread %lld] Join done...\n", threadId);
     }
 
+    // guarantees validity of returned object
     static std::shared_ptr<CThread> getCurrent()
     {
-        return getById(currentThreadId);
+        std::shared_ptr<CThread> p = getById(currentThreadId);
+        assert(p);
+        return p;
     }
     
     static std::shared_ptr<CThread> getById(uint64_t tid)
@@ -141,7 +144,7 @@ public:
     }
 
     void lock(uint64_t lockId) {
-        printf("[Thread %lld] Locking object %d\n", threadId, lockId);
+        fprintf(stderr, "[Thread %lld] Locking object %llu\n", threadId, lockId);
         std::unique_lock<std::mutex> registryLock(syncObjectsMutex);
         
         if (mutexMap.find(lockId) == mutexMap.end()) {
@@ -152,7 +155,7 @@ public:
         registryLock.unlock();
         
         mtx->lock();
-        printf("[Thread %lld] Locked object %d\n", threadId, lockId);
+        fprintf(stderr, "[Thread %lld] Locked object %llu\n", threadId, lockId);
     }
     
     void unlock(uint64_t lockId) {
@@ -160,10 +163,10 @@ public:
         
         auto it = mutexMap.find(lockId);
         if (it != mutexMap.end()) {
-            printf("[Thread %lld] Unlocking object %d\n", threadId, lockId);
+            fprintf(stderr, "[Thread %lld] Unlocking object %llu\n", threadId, lockId);
             it->second->unlock();
         } else {
-            printf("[Thread %lld] Warning: Unlock on non-existent lock %d\n", threadId, lockId);
+            fprintf(stderr, "[Thread %lld] Warning: Unlock on non-existent lock %llu\n", threadId, lockId);
         }
     }
 };

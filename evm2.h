@@ -267,7 +267,6 @@ private:
                 }
                 case Op::ADD: case Op::SUB: case Op::DIV: case Op::MOD: case Op::MUL:
                 case Op::COMPARE: {
-                    int nargs = (op == Op::MOV ? 2 : 3);
                     for (int i = 0; i < 3; ++i) {
                         // COMPARE and arithmetic use 3 args; MOV handled above
                         if (i >= 3) break;

@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <libkern/OSCacheControl.h>
 
-using Operand = EVM2::Arg;
 /**
  * ARM64 JIT Frontend - High-level code generation interface
  * 
@@ -28,6 +27,9 @@ using Operand = EVM2::Arg;
  *   - SP: Stack pointer
  */
 class ARM64JITFrontend {
+public:
+    using Operand = EVM2::Arg;
+
 private:
     std::vector<uint32_t> code;
     void* executable_memory;
@@ -102,11 +104,6 @@ public:
      *   x0 = memory pointer
      *   x1 = registers pointer
      *   x2 = entry_point (number of ARM64 instructions to skip)
-     * 
-     * The entry_point mechanism:
-     *   - x2 contains the number of ARM64 instructions to skip (0 = no skip)
-     *   - We compute PC + (x2 * 4) and jump to that address
-     *   - This allows skipping N generated ARM64 instructions
      */
     void begin() {
         code.clear();
@@ -538,6 +535,10 @@ public:
         return executable_memory;
     }
     
+    /**
+     * Index of first instruction after main prologue
+     */
+
     size_t entry()
     {
         return 11;
